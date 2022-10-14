@@ -1,0 +1,178 @@
+@font-face {
+    font-family: FredokaOne;
+    src: url("../fonts/FredokaOne.woff") format("woff"),
+         url("../fonts/FredokaOne.ttf") format("truetype");
+}
+
+:root, body {
+    font-family: helvetica, sans-serif;
+    margin: 0;
+    min-width: 300px;
+}
+
+/* Header */
+
+header {
+    background-color: #313849;
+    color: white;
+    margin: 0;
+    width: 100%;
+    display: flex;
+}
+
+header * {
+    margin: 0;
+    padding: 2px 6px;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    padding: 0;
+}
+
+/* Logo and Name in header */
+
+#headerName {
+    font-family: FredokaOne, serif;
+}
+
+#headerName img {
+    height: 50px;
+    padding: 8px 6px 2px;
+}
+
+#headerName h1 {
+    float: right;
+    font-size: 46px;
+}
+
+/* Search box in header */
+
+#headerSearch {
+    flex-grow: 1;
+    margin: 8px;
+    padding: 0;
+    border-radius: 10px;
+    width: 0;
+}
+
+#headerSearch input {
+    height: 100%;
+    width: calc(100% - 58px);
+    padding: 0px 8px;
+    border: none;
+    border-radius: 10px 0 0 10px;
+}
+
+#headerSearch button {
+    height: 100%;
+    padding: 0 8px;
+    margin: 0;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    background-color: #455c94;
+    color: white;
+}
+
+/* Account & Orders in header */
+
+#headerButtons {
+    display: flex;
+}
+
+#headerButtons p {
+    display: flex;
+    justify-content: center;
+}
+
+#headerButtons div {
+    margin: 5px 0;
+}
+
+.headerButtonCenter {
+    line-height: 46px;
+}
+
+#headerButtonsDropdown {
+    display: none;
+}
+
+#headerButtonsDropdown {
+    background-color: inherit;
+    border: none;
+    color: white;
+    font-size: larger;
+}
+
+/* Header tweaks for various screen widths */
+
+@media screen and (max-width: 1200px) {
+    #headerName h1 {
+        font-size: 16px;
+        width: 60px;
+        text-align: right;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    header {
+        height: 44px;
+    }
+
+    #headerName h1 {
+        display: none;
+    }
+
+    #headerName img {
+        height: 36px;
+        padding: 2px 3px 0;
+    }
+
+    #headerSearch {
+        margin: 4px 0 4px 2px;
+    }
+
+    #headerButtons p {
+        display: none;
+    }
+
+    .headerButtonCenter {
+        line-height: unset;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    header {
+        height: unset;
+        flex-flow: row wrap;
+    }
+
+    #headerName {
+        padding: 0 2px;
+    }
+
+    #headerButtonsDropdown {
+        display: unset;
+    }
+
+    #headerButtons {
+        width: 100%;
+        padding: 0;
+        display: none;
+    }
+
+    #headerButtons div {
+        border-top: 1px solid #686f83;
+        padding: 6px;
+        font-size: larger;
+    }
+
+    .showDropdown #headerButtons {
+        display: block;
+    }
+
+    .showDropdown #headerButtonsDropdown {
+        color: grey;
+    }
+}
