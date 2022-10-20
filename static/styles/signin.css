@@ -1,0 +1,126 @@
+/* Page Layout */
+
+:root, body {
+    background-color: var(--theme-main);
+}
+
+#signinHeader {
+    color: white;
+    font-family: FredokaOne, sans-serif;
+    font-size: calc(4vw + 3pt);
+    margin: auto;
+    width: fit-content;
+}
+
+#signinHeader img {
+    display: block;
+    margin: 4vh auto 0 auto;
+    width: 128px;
+}
+
+#signinHeader h1 {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    margin: 8px 0 16px 0;
+}
+
+.signInContent {
+    width: 80%;
+    margin: auto;
+    max-width: 500px;
+    display: block;
+}
+
+#signinBox {
+    background-color: white;
+    border-radius: 4px;
+}
+
+#switchSignInButton {
+    margin-top: 24px;
+    background-color: var(--theme-purple);
+    color: black;
+}
+
+/* Tweak sizes for various screens */
+
+@media screen and (min-width: 665px) {
+    #signinHeader {
+        font-size: 24pt;
+    }
+
+    #signinHeader img {
+        width: 160px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    #signinHeader img {
+        margin: 12px auto 0 auto;
+        width: 96px;
+    }
+
+    .signInContent {
+        width: 85%;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    #signinHeader {
+        font-size: 11pt;
+    }
+}
+
+/* Form Layout */
+
+form {
+    padding: 16px;
+}
+
+form h1 {
+    margin: 0 0 16px 0;
+    font-size: 28pt;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    margin: 8px 0 16px 0;
+    padding: 8px;
+    border: 2px solid #8f8f9d;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: large;
+}
+
+form input[type="checkbox"] {
+    display: inline-block;
+    accent-color: var(--theme-main);
+    margin: 0 8px 0 16px;
+    cursor: pointer;
+}
+
+form input[type="submit"] {
+    display: block;
+    margin-top: 16px;
+    width: 100%;
+    background-color: var(--theme-main);
+    color: white;
+}
+
+#switchSignInButton,
+input[type="submit"] {
+    border: none;
+    font-weight: bold;
+    font-size: 12pt;
+    padding: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+@media screen and (min-width: 380px) {
+    #switchSignInButton br {
+        display: none;
+    }
+}
