@@ -1,4 +1,6 @@
 <?php
+// Copyright (c) 2022 JoeBlakeB, all rights reserved.
+
 $rootPath = "../";
 set_include_path("{$rootPath}include");
 ?>
@@ -25,19 +27,35 @@ set_include_path("{$rootPath}include");
         <form method="post">
             <h1>Sign In</h1>
 
-            <label for="email">Email Address:</label>
-            <input type="text" name="email" id="email" required>
+            <div class="inputContainer" id="emailContainer">
+                <label for="email">Email Address:</label>
+                <input maxlength="256" type="text" name="email" id="email" value="<?php
+                    if (isset($_POST["email"])) {
+                        echo $_POST["email"];
+                    }?>" required>
+                <p></p>
+            </div>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
+            <div class="inputContainer">
+                <label for="password">Password:</label>
+                <input maxlength="256" type="password" name="password" id="password" required>
+                <p></p>
+            </div>
 
-            <input type="checkbox" id="remember" name="remember" value="true">
+            <input type="checkbox" id="remember" name="remember" value="true" <?php
+                if (isset($_POST["remember"])) {
+                    echo "checked";
+                }?>>
             <label for="remember"> Keep me signed in.</label>
 
-            <input type="submit" value="Log In">
+            <input type="submit" value="Sign In" formType="signin" id="submitButton">
         </form>
     </div>
-    <button class="signInContent" id="switchSignInButton">New customer? <br>Create an account</button>
+    <div class="signInContent" id="switchSignInButton"><a href="register.php">
+        <p>New customer? <br>Create an account</p></a>
+    </div>
+
+    <script src="<?php echo $rootPath; ?>static/scripts/signinValidation.js"></script>
 </body>
 
 </html>

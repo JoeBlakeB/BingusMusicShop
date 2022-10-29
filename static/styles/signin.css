@@ -1,6 +1,9 @@
+/* Copyright (c) 2022 JoeBlakeB, all rights reserved. */
+
 /* Page Layout */
 
-:root, body {
+:root,
+body {
     background-color: var(--theme-main);
 }
 
@@ -20,7 +23,6 @@
 
 #signinHeader h1 {
     color: white;
-    text-decoration: none;
     display: inline-block;
     margin: 8px 0 16px 0;
 }
@@ -86,7 +88,7 @@ form h1 {
 form input[type="text"],
 form input[type="password"] {
     width: 100%;
-    margin: 8px 0 16px 0;
+    margin: 8px 0 4px 0;
     padding: 8px;
     border: 2px solid #8f8f9d;
     border-radius: 4px;
@@ -97,7 +99,7 @@ form input[type="password"] {
 form input[type="checkbox"] {
     display: inline-block;
     accent-color: var(--theme-main);
-    margin: 0 8px 0 16px;
+    margin: 0 8px 8px 16px;
     cursor: pointer;
 }
 
@@ -107,6 +109,7 @@ form input[type="submit"] {
     width: 100%;
     background-color: var(--theme-main);
     color: white;
+    padding: 16px;
 }
 
 #switchSignInButton,
@@ -114,13 +117,37 @@ input[type="submit"] {
     border: none;
     font-weight: bold;
     font-size: 12pt;
-    padding: 16px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+#switchSignInButton p {
+    padding: 16px;
+    text-align: center;
+    color: black;
 }
 
 @media screen and (min-width: 380px) {
     #switchSignInButton br {
         display: none;
     }
+}
+
+.inputContainer {
+    margin-bottom: 12px;
+}
+
+.inputContainer p {
+    display: none;
+}
+
+.inputContainer.error input {
+    background-color: #ffd0d0;
+}
+
+.inputContainer.error p {
+    display: block;
+    color: red;
+    font-weight: bold;
+    margin: 0 0 8px 0;
 }

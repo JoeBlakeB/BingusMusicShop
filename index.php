@@ -1,4 +1,6 @@
 <?php
+/* Copyright (c) 2022 JoeBlakeB, all rights reserved. */
+
 $rootPath = "./";
 set_include_path("{$rootPath}include");
 ?>

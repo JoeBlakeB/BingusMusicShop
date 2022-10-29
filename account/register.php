@@ -1,4 +1,6 @@
 <?php
+// Copyright (c) 2022 JoeBlakeB, all rights reserved.
+
 $rootPath = "../";
 set_include_path("{$rootPath}include");
 ?>
@@ -25,22 +27,59 @@ set_include_path("{$rootPath}include");
         <form method="post">
             <h1>Register</h1>
 
-            <label for="name">Your Name:</label>
-            <input type="text" name="name" id="name" required>
+            <?php
+            // Tell user if there was invalid data.
+            // Should not be needed with the javascript validation.
+            // TODO
+            if (isset($invalid)) {
+                echo "<p style=\"color:red\">Invalid input</p>";
+            }
+            ?>
 
-            <label for="email">Email Address:</label>
-            <input type="text" name="email" id="email" required>
+            <div class="inputContainer" id="nameContainer">
+                <label for="name">Your Full Name:</label>
+                <input maxlength="256" type="text" name="name" id="name" value="<?php
+                    if (isset($_POST["name"])) {
+                        echo $_POST["name"];
+                    }?>" required>
+                <p></p>
+            </div>
+            
+            <div class="inputContainer" id="emailContainer">
+                <label for="email">Email Address:</label>
+                <input maxlength="256" type="text" name="email" id="email" value="<?php
+                    if (isset($_POST["email"])) {
+                        echo $_POST["email"];
+                    }?>" required>
+                <p></p>
+            </div>
 
-            <label for="password1">Password:</label>
-            <input type="password" name="password1" id="password1" required>
+            <div class="inputContainer" id="passwordContainer">
+                <label for="password">Password:</label>
+                <input maxlength="256" type="password" name="password" id="password" value="<?php
+                    if (isset($_POST["password"])) {
+                        echo $_POST["password"];
+                    }?>" required>
+                <p></p>
+            </div>
+            
+            <div class="inputContainer" id="passwordConfContainer">
+                <label for="passwordConf">Confirm Password:</label>
+                <input maxlength="256" type="password" name="passwordConf" id="passwordConf" value="<?php
+                    if (isset($_POST["passwordConf"])) {
+                        echo $_POST["passwordConf"];
+                    }?>" required>
+                <p></p>
+            </div>
 
-            <label for="password2">Confirm Password:</label>
-            <input type="password" name="password2" id="password2" required>
-
-            <input type="submit" value="Register">
+            <input type="submit" value="Register" formType="register" id="submitButton">
         </form>
     </div>
-    <button class="signInContent" id="switchSignInButton">Already have an account? <br>Sign In</button>
+    <div class="signInContent" id="switchSignInButton"><a href="signin.php">
+        <p>Already have an account? <br>Sign In</p>
+    </a></div>
+
+    <script src="<?php echo $rootPath; ?>static/scripts/signinValidation.js"></script>
 </body>
 
 </html>

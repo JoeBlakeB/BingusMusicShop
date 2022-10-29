@@ -3,6 +3,7 @@
  * The header for most pages on the website.
  * 
  * @author Joe Baker
+ * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 ?>
 
@@ -20,7 +21,7 @@
     </div>
     <button onclick="document.querySelector('header').classList.toggle('showDropdown')" id="headerButtonsDropdown"><i class="fa-solid fa-bars"></i></button>
     <div id="headerButtons">
-        <a href="#">
+        <a href="<?php echo (false) ? "#" : $rootPath . "account/signin.php"; ?>">
             <div>
                 <h3>
                     <?php echo (false) ? "Admin" : "Account"; ?>

@@ -1,3 +1,5 @@
+/* Copyright (c) 2022 JoeBlakeB, all rights reserved. */
+
 @font-face {
     font-family: FredokaOne;
     src: url("../fonts/FredokaOne.woff") format("woff"),
@@ -10,13 +12,19 @@
          url("../fonts/OpenSans.ttf") format("truetype");
 }
 
-:root, body {
+:root, body, input[type="submit"] {
     font-family: OpenSans, helvetica, sans-serif;
     margin: 0;
     min-width: 300px;
     
     --theme-main: #313849;
     --theme-purple: #9a82b4;
+}
+
+/* General */
+
+a {
+    text-decoration: none;
 }
 
 /* Header */
@@ -37,7 +45,6 @@ header * {
 
 header a {
     color: white;
-    text-decoration: none;
     padding: 0;
 }
 
@@ -98,7 +105,7 @@ header a {
 }
 
 #headerButtons div {
-    margin: 5px 0;
+    margin: 3px 0;
 }
 
 .headerButtonCenter {

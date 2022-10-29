@@ -3,6 +3,7 @@
  * The standard meta tags and stylesheets.
  * 
  * @author Joe Baker
+ * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 ?>
 
