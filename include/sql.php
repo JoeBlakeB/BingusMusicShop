@@ -3,6 +3,7 @@
  * Functions used for SQL queries
  * 
  * @author Joe Baker
+ * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
 /**

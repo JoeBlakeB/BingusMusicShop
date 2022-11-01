@@ -1,10 +1,37 @@
---- Create tables
+-- Copyright (c) 2022 JoeBlakeB, all rights reserved.
 
+-- Create tables
 
---- Create admin user
+CREATE TABLE IF NOT EXISTS accounts (
+    accountID       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email           VARCHAR(255) NOT NULL,
+    passwordHash    VARCHAR(60)  NOT NULL,
+    2faEnabled      BOOLEAN      NOT NULL DEFAULT FALSE,
+    isAdmin         BOOLEAN      NOT NULL DEFAULT FALSE,
+    fullName        VARCHAR(255),
+    PRIMARY KEY (accountID),
+    UNIQUE (email)
+);
 
+CREATE TABLE IF NOT EXISTS unverifiedAccounts (
+    accountID        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    verificationCode VARCHAR(6)   NOT NULL,
+    expires          DATETIME     NOT NULL,
+    PRIMARY KEY (accountID),
+    FOREIGN KEY (accountID)
+        REFERENCES accounts (accountID)
+        ON DELETE CASCADE
+);
 
---- Delete tables
-/*
-DROP TABLE IF EXISTS users;
-*/
+-- Create admin user
+-- Password is "Password123"
+INSERT INTO accounts (email, passwordHash, isAdmin, fullName)
+VALUES (
+    "admin@example.com",
+    "$2y$10$FhNu9AAHCHCi.dypJfbdQeb0Dnj3vsb5KwK.WwfdxUnQ7bexHNyo6",
+    true, "Admin"
+);
+
+-- Delete tables
+DROP TABLE IF EXISTS unverifiedAccounts;
+DROP TABLE IF EXISTS accounts;

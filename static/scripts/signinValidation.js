@@ -1,7 +1,5 @@
 // Copyright (c) 2022 JoeBlakeB, all rights reserved.
 
-"use strict";
-
 let form = document.getElementsByTagName("form")[0];
 let formType = form.submitButton.getAttribute("formtype");
 
@@ -9,17 +7,29 @@ let formType = form.submitButton.getAttribute("formtype");
 // and to warn the user if it is not.
 
 form.addEventListener("submit", function (event) {
-    if (formType === "signin") {
-        if (verifyEmail()) {
-            return form.submit();
-        }
-    }
-    else if (formType === "register") {
+    if (formType === "register") {
         // Check each on a different line to force all to run
         let verified = verifyEmail();
         verified = verifyPassword() && verified;
         verified = verifyName() && verified;
         if (verified) {
+            return form.submit();
+        }
+    }
+    else if (formType === "auth") {
+        if (verifyAuth()) {
+            return form.submit();
+        }
+    }
+    else if (formType === "authWithEmail") {
+        let verified = verifyEmail();
+        verified = verifyAuth() && verified;
+        if (verified) {
+            return form.submit();
+        }
+    }
+    else {
+        if (verifyEmail()) {
             return form.submit();
         }
     }
@@ -29,7 +39,7 @@ form.addEventListener("submit", function (event) {
 // Check fields are valid, if they are not warn the user
 // return bool for validity to use in submit event listener.
 
-// Update the DOM
+// Update the DOM after the check
 function verify(element, valid=true, message="") {
     if (valid) {
         element.classList.remove("error");
@@ -84,7 +94,10 @@ function verifyPassword() {
     else {
         verify(passwordContainer);
         // if passwordConf is not default, check it as well
-        return verifyPasswordConf();
+        if (passwordConfContainer.classList.contains("edited")) {
+            return verifyPasswordConf();
+        }
+        return false;
     }
 }
 
@@ -104,7 +117,7 @@ function verifyName() {
     let name = nameContainer.children[1].value;
     let error = false;
     if (name.length === 0) {
-        error = "Name cannot be empty.";
+        error = "You must enter your name.";
     }
     else if (name.length > 256) {
         error = "Your name must not be longer than 256 characters.";
@@ -113,9 +126,22 @@ function verifyName() {
     return !error;
 }
 
+// Check a verification code is a 6 digit number
+function verifyAuth() {
+    let auth = authContainer.children[1].value;
+    let error = false;
+    if (!auth.match(/^[0-9]{6}$/)) {
+        error = "Your verification code must be 6 digits.";
+    }
+    verify(authContainer, !error, error);
+    return !error;
+}
+
 // Add event listeners to check when the user exits the field
-var emailContainer = document.getElementById("emailContainer");
-emailContainer.children[1].addEventListener("focusout", verifyEmail);
+if (formType !== "auth") {
+    var emailContainer = document.getElementById("emailContainer");
+    emailContainer.children[1].addEventListener("focusout", verifyEmail);
+}
 
 if (formType === "register") {
     var passwordContainer = document.getElementById("passwordContainer");
@@ -125,4 +151,8 @@ if (formType === "register") {
     passwordContainer.children[1].addEventListener("focusout", verifyPassword);
     passwordConfContainer.children[1].addEventListener("focusout", verifyPasswordConf);
     nameContainer.children[1].addEventListener("focusout", verifyName);
+}
+else if (formType === "auth" || formType === "authWithEmail") {
+    var authContainer = document.getElementById("authContainer");
+    authContainer.children[1].addEventListener("focusout", verifyAuth);
 }

@@ -14,6 +14,9 @@
 
 :root, body, input[type="submit"] {
     font-family: OpenSans, helvetica, sans-serif;
+}
+
+:root, body {
     margin: 0;
     min-width: 300px;
     
@@ -163,7 +166,7 @@ header a {
 
 @media screen and (max-width: 550px) {
     header {
-        height: 42px;
+        height: unset;
         flex-flow: row wrap;
     }
 

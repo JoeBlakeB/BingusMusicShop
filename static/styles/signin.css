@@ -141,11 +141,11 @@ input[type="submit"] {
     display: none;
 }
 
-.inputContainer.error input {
+.error input {
     background-color: #ffd0d0;
 }
 
-.inputContainer.error p {
+.error p {
     display: block;
     color: red;
     font-weight: bold;
