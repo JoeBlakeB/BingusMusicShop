@@ -1,6 +1,6 @@
 <?php
 /**
- * Functions used for SQL queries
+ * Utility functions used by multiple pages.
  * 
  * @author Joe Baker
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
@@ -40,6 +40,22 @@ function sqlConnect() {
             PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => 0
         )
     );
+}
+
+/**
+ * Set the session variables for the account,
+ * then redirect to the account details page.
+ * 
+ * @param array $account The account details
+ */
+function signin($account) {
+    session_unset();
+    $_SESSION["account"] = [
+        "fullName" => $account["fullName"],
+        "email" => $account["email"],
+        "isAdmin" => $account["isAdmin"]
+    ];
+    header("Location: details.php");
 }
 
 ?>

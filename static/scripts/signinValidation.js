@@ -94,7 +94,8 @@ function verifyPassword() {
     else {
         verify(passwordContainer);
         // if passwordConf is not default, check it as well
-        if (passwordConfContainer.classList.contains("edited")) {
+        if (passwordConfContainer.children[1].value !== "" ||
+            passwordConfContainer.classList.contains("edited")) {
             return verifyPasswordConf();
         }
         return false;

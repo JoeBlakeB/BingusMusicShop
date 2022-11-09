@@ -1,20 +1,21 @@
 <?php
-// Copyright (c) 2022 JoeBlakeB, all rights reserved.
-
-/*
+/**
  * Check verification codes sent via email, if the code is valid
  * the user will be signed in, and if its a new account the
  * account will be verified by deleting them from unverifiedAccounts.
  * If there are any expired codes, their accounts will be deleted.
+ * 
+ * @author Joe Baker
+ * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
 $rootPath = "../";
 set_include_path("{$rootPath}include");
 session_start();
 
-// Redirect to account info if already signed in
-if (isset($_SESSION["authorised"])) {
-    header("Location: ../account");
+// Redirect to account details if already signed in
+if (isset($_SESSION["account"])) {
+    header("Location: details.php");
     die();
 }
 
@@ -22,51 +23,74 @@ if (isset($_SESSION["authorised"])) {
 if (isset($_POST["email"])) {
     $email = $_POST["email"];
 }
-else if (isset($_SESSION["emailToVerify"]) && isset($_GET["action"])) {
-    $email = $_SESSION["emailToVerify"];
+else if (isset($_SESSION["email"])) {
+    $email = $_SESSION["email"];
 }
 
-// TODO check that this is for account verification and not 2fa
-// Check code and delete expired accounts
+$twofa = isset($_SESSION["2faCode"]);
+
+// Auth code was entereed
 if (isset($email) && isset($_POST["auth"])) {
-    include "sql.php";
+    include "utils.php";
     try {
-        $dbh = sqlConnect();
+        if ($twofa) {
+            $authorised = ($_SESSION["2faCode"] == $_POST["auth"]);
 
-        // Delete expired accounts first
-        $stmt = $dbh->prepare("DELETE accounts, unverifiedAccounts FROM accounts
-            INNER JOIN unverifiedAccounts ON accounts.accountID = unverifiedAccounts.accountID
-            WHERE expires < NOW();");
-        $stmt->execute();
-
-        // Check code is valid
-        $email = strtolower($email);
-        $stmt = $dbh->prepare("SELECT accounts.accountID FROM unverifiedAccounts
-            INNER JOIN accounts ON unverifiedAccounts.accountID = accounts.accountID
-            WHERE email = :email AND verificationCode = :verificationCode;");
-        $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":verificationCode", $_POST["auth"]);
-        $stmt->execute();
-        $authorised = ($stmt->rowCount() != 0);
-        $accountID = $stmt->fetch()["accountID"];
-        
-        // Verify account by deleting it from unverifiedAccounts
-        if ($authorised) {
-            $stmt = $dbh->prepare("DELETE FROM unverifiedAccounts WHERE accountID = :accountID;");
-            $stmt->bindParam(":accountID", $accountID);
-            $stmt->execute();
+            // Get account details, then set session variables
+            if ($authorised) {
+                $dbh = sqlConnect();
+                $stmt = $dbh->prepare("SELECT fullName, email, isAdmin
+                    FROM accounts WHERE email = :email;");
+                $stmt->bindParam(":email", $_SESSION["email"]);
+                $stmt->execute();
+                $account = $stmt->fetch();
+                signin($account);
+                die();
+            }
         }
+        // Check code and delete expired accounts
+        else {
+            $dbh = sqlConnect();
 
-        $dbh = null;
+            // Delete expired accounts first
+            $stmt = $dbh->prepare("DELETE accounts, unverifiedAccounts FROM accounts
+                INNER JOIN unverifiedAccounts ON accounts.accountID = unverifiedAccounts.accountID
+                WHERE expires < NOW();");
+            $stmt->execute();
+
+            // Check code is valid
+            $email = strtolower($email);
+            $stmt = $dbh->prepare("SELECT accounts.accountID FROM unverifiedAccounts
+                INNER JOIN accounts ON unverifiedAccounts.accountID = accounts.accountID
+                WHERE email = :email AND verificationCode = :verificationCode;");
+            $stmt->bindParam(":email", $email);
+            $stmt->bindParam(":verificationCode", $_POST["auth"]);
+            $stmt->execute();
+            $authorised = ($stmt->rowCount() != 0);
+            
+            if ($authorised) {
+                $accountID = $stmt->fetch()["accountID"];
+                // Verify account by deleting it from unverifiedAccounts
+                $stmt = $dbh->prepare("DELETE FROM unverifiedAccounts WHERE accountID = :accountID;");
+                $stmt->bindParam(":accountID", $accountID);
+                $stmt->execute();
+
+                // Add user object to session variables and redirect to account details
+                $stmt = $dbh->prepare("SELECT fullName, email, isAdmin
+                    FROM accounts WHERE accountID = :accountID;");
+                $stmt->bindParam(":accountID", $accountID);
+                $stmt->execute();
+                $account = $stmt->fetch();
+                signin($account);
+                die();
+            }
+
+            $dbh = null;
+        }
     }
     catch (PDOException $e) {
         $errorMsg = "There was an error accessing the database, please try again later.";
     }
-}
-
-// Log in user
-if (isset($authorised) && $authorised) {
-    die("Account created successfully, nothing more is implemented yet.");
 }
 
 ?>
@@ -90,9 +114,8 @@ if (isset($authorised) && $authorised) {
         </a>
     </div>
     <div class="signInContent" id="signinBox">
-        <form method="post">
-            <h1>Verify Your Account</h1>
-            <!-- TODO >Two Factor Authentication< for 2fa -->
+        <form method="post" class="form">
+            <h1><?php echo $twofa ? "Two Factor Authentication" : "Verify Your Account"; ?></h1>
             
             <?php
                 if (isset($errorMsg)) {
@@ -109,9 +132,19 @@ if (isset($authorised) && $authorised) {
                     </p></div>
                     <?php
                 }
-                
-                if (isset($_GET["action"])) {
-                    echo "<p>The verification code has been sent to your email address, please check your spam folder.</p>";
+
+                // Only show email input if not already set
+                if ($twofa || (isset($_GET["action"]) && isset($email))) {
+                    if ($twofa || $_GET["action"] == "register") {
+                        ?><p>
+                            A verification code has been sent to your email address, please check your spam folder.
+                        </p><?php
+                    }
+                    else {
+                        ?><p>
+                            You must verify your account before you can sign in, please check your email for a verification code.
+                        </p><?php
+                    }
                 }
                 else {
             ?>
@@ -137,7 +170,6 @@ if (isset($authorised) && $authorised) {
             </div>
 
             <input type="submit" value="Verify" formType="<?php echo (isset($_GET["action"])) ? "auth" : "authWithEmail" ?>" id="submitButton">
-            <!-- TODO value="Authenticate" for 2fa -->
         </form>
     </div>
 

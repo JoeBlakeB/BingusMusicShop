@@ -1,20 +1,21 @@
 <?php
-// Copyright (c) 2022 JoeBlakeB, all rights reserved.
-
-/*
+/**
  * Register a new user account. The user will also
  * get added to the unverifiedAccounts table and
  * an authentication email will be sent to their email 
  * address, they will be redirected to verification.php
+ * 
+ * @author Joe Baker
+ * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
 $rootPath = "../";
 set_include_path("{$rootPath}include");
 session_start();
 
-// Redirect to account info if already signed in
-if (isset($_SESSION["authorised"])) {
-    header("Location: ../account/");
+// Redirect to account details if already signed in
+if (isset($_SESSION["account"])) {
+    header("Location: details.php");
     die();
 }
 
@@ -48,12 +49,12 @@ if (!empty($_POST["name"])
 
 // Everything is valid
 if ($valid["all"]) {
-    include "sql.php";
+    include "utils.php";
     try {
         $dbh = sqlConnect();
 
         // Check email is not used
-        true;
+        $email = strtolower($email);
         $stmt = $dbh->prepare("SELECT * FROM accounts WHERE email = :email");
         $stmt->bindParam(":email", $email);
         $stmt->execute();
@@ -65,7 +66,6 @@ if ($valid["all"]) {
             $passwordHash = password_hash($password1, PASSWORD_DEFAULT);
             $verificationCode = str_pad(rand(1, 999999), 6, 0, STR_PAD_LEFT);
             $expires = date("Y-m-d H:i:s", strtotime("+1 day"));
-            $email = strtolower($email);
 
             // Add account to database
             $stmt = $dbh->prepare("INSERT INTO accounts (email, passwordHash, fullName)
@@ -92,7 +92,8 @@ if ($valid["all"]) {
 
 if (isset($success)) {
     // Add email to session
-    $_SESSION["emailToVerify"] = $email;
+    session_unset();
+    $_SESSION["email"] = $email;
 
     // Send verification email
     $subject = "Bingus Music Shop Account Verification";
@@ -127,7 +128,7 @@ if (isset($success)) {
         </a>
     </div>
     <div class="signInContent" id="signinBox">
-        <form method="post">
+        <form method="post" class="form">
             <h1>Register</h1>
 
             <?php

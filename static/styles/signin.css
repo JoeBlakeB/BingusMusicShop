@@ -76,17 +76,20 @@ body {
 
 /* Form Layout */
 
-form {
+.form {
     padding: 16px;
 }
 
-form h1 {
+.form h1, .form h2 {
     margin: 0 0 16px 0;
+}
+
+.form h1 {
     font-size: 28pt;
 }
 
-form input[type="text"],
-form input[type="password"] {
+.form input[type="text"],
+.form input[type="password"] {
     width: 100%;
     margin: 8px 0 4px 0;
     padding: 8px;
@@ -96,29 +99,30 @@ form input[type="password"] {
     font-size: large;
 }
 
-form input[type="checkbox"] {
-    display: inline-block;
-    accent-color: var(--theme-main);
-    margin: 0 8px 8px 16px;
-    cursor: pointer;
-}
-
-form input[type="submit"] {
+.form input[type="submit"],
+.signOutButton {
     display: block;
     margin-top: 16px;
     width: 100%;
     background-color: var(--theme-main);
     color: white;
-    padding: 16px;
+    padding: 16px 0;
 }
 
 #switchSignInButton,
-input[type="submit"] {
+input[type="submit"],
+.signOutButton {
     border: none;
     font-weight: bold;
     font-size: 12pt;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.signOutButton p {
+    color: white;
+    text-align: center;
+    margin: 0;
 }
 
 #switchSignInButton p {
