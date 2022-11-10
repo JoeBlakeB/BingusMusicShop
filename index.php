@@ -3,6 +3,7 @@
 
 $rootPath = "./";
 set_include_path("{$rootPath}include");
+session_start();
 ?>
 
 <!DOCTYPE html>

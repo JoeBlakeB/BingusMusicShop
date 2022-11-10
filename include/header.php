@@ -21,19 +21,27 @@
     </div>
     <button onclick="document.querySelector('header').classList.toggle('showDropdown')" id="headerButtonsDropdown"><i class="fa-solid fa-bars"></i></button>
     <div id="headerButtons">
-        <a href="<?php echo (false) ? "#" : $rootPath . "account/signin.php"; ?>">
+        <a href="<?php echo $rootPath . "account/" . 
+            (isset($_SESSION["account"]) ? "details" : "signin")
+            . ".php" ?>">
             <div>
-                <h3>
-                    <?php echo (false) ? "Admin" : "Account"; ?>
-                </h3>
-                <p>
-                    <?php echo (false) ? "Username" : "Sign In"; ?>
-                </p>
+                <h3><?php echo (
+                    isset($_SESSION["account"]) ?
+                    "Account" : "Sign In"); ?></h3>
+                <p><?php echo (
+                    isset($_SESSION["account"]) ?
+                    $_SESSION["account"]["fullName"] :
+                    "or Register"); ?></p>
             </div>
         </a>
         <a href="#">
+        <a href="<?php echo $rootPath . 
+            ((isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
+                "admin/overview.php" : "products/orders.php") ?>">
             <div class="headerButtonCenter">
-                <h3>Orders</h3>
+                <h3>
+                    <?php echo (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
+                        "Admin" : "Orders"; ?></h3>
             </div>
         </a>
     </div>
