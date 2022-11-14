@@ -169,12 +169,12 @@ include "utils.php";
                 <?php
                 foreach ($accounts as $account) {
                     ?>
-                    <tr onclick="window.location.href='users.php?accountID=<?php echo $account[0]; ?>'">
-                        <td class="min"><?php echo $account[0]; ?></td>
-                        <td><?php echo htmlspecialchars($account["fullName"]); ?></td>
-                        <td><?php echo htmlspecialchars($account["email"]); ?></td>
-                        <td class="min"><?php echo $account["isAdmin"] ? "Yes" : "No"; ?></td>
-                        <td class="min"><?php echo !isset($account["verificationCode"]) ? "Yes" : "No"; ?></td>
+                    <tr onclick="window.location.href='users.php?accountID=<?=$account[0];?>'">
+                        <td><?=$account[0];?></td>
+                        <td class="columnBig"><?=htmlspecialchars($account["fullName"]);?></td>
+                        <td class="columnBig"><?=htmlspecialchars($account["email"]);?></td>
+                        <td><?=$account["isAdmin"] ? "Yes" : "No";?></td>
+                        <td><?=!isset($account["verificationCode"]) ? "Yes" : "No";?></td>
                     </tr>
                     <?php
                 }

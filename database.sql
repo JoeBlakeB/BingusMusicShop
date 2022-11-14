@@ -23,6 +23,27 @@ CREATE TABLE IF NOT EXISTS unverifiedAccounts (
         ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS products (
+    productID   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT,
+    price       DECIMAL(7,2) NOT NULL,
+    discount    TINYINT UNSIGNED,
+    stock       INT UNSIGNED NOT NULL,
+    PRIMARY KEY (productID)
+);
+
+CREATE TABLE IF NOT EXISTS images (
+    imageID     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID   INT UNSIGNED NOT NULL,
+    fileHash    VARCHAR(32) NOT NULL,
+    fileType    VARCHAR(4) NOT NULL,
+    PRIMARY KEY (imageID),
+    FOREIGN KEY (productID)
+        REFERENCES products (productID)
+        ON DELETE CASCADE
+);
+
 -- Create admin user
 -- Password is "Password123"
 INSERT INTO accounts (email, passwordHash, isAdmin, fullName)
