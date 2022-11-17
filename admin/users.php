@@ -35,6 +35,10 @@ include "utils.php";
     <div class="basicContent">
     <h1>Users</h1>
 
+    <a href="overview.php" class="button">
+        <p>Back to Admin Overview</p>
+    </a>
+
     <?php
     try {
         $dbh = sqlConnect();
@@ -63,7 +67,6 @@ include "utils.php";
                 case "Delete User":
                     $stmt = $dbh->prepare("DELETE FROM accounts WHERE accountID = :accountID;");
                     echo "<p>Deleted user #" . $_GET["accountID"] . ".</p>";
-                    unset($_GET["accountID"]);
                     break;
                 default:
                     $stmt = null;
@@ -73,6 +76,9 @@ include "utils.php";
             if ($stmt) {
                 $stmt->bindParam(":accountID", $_GET["accountID"]);
                 $stmt->execute();
+                if ($_POST["action"] == "Delete User") {
+                    unset($_GET["accountID"]);
+                }
             }
         }
         catch (PDOException $e) {
