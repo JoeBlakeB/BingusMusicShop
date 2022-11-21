@@ -2,7 +2,10 @@
 <html lang="en">
 
 <head>
-    <?php require "head.php"; ?>
+    <?php
+    $title = "Sign In";
+    require "head.php";
+    ?>
     <link rel="stylesheet" href="/static/styles/signin.css">
 </head>
 

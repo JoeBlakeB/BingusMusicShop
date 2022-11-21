@@ -2,7 +2,10 @@
 <html lang="en">
 
 <head>
-    <?php require "head.php"; ?>
+    <?php
+    $title = ($formType == "signin") ? "Authentication" : "Verification";
+    require "head.php";
+    ?>
     <link rel="stylesheet" href="/static/styles/signin.css">
 </head>
 
@@ -15,7 +18,7 @@
     </div>
     <div class="signInContent" id="signinBox">
         <form method="post" class="form">
-            <h1><?php echo ($formType == "signin") ? "Two Factor Authentication" : "Verify Your Account"; ?></h1>
+            <h1><?= ($formType == "signin") ? "Two Factor Authentication" : "Verify Your Account"; ?></h1>
             
             <?php
                 if (isset($errorMsg)) {

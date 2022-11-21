@@ -7,20 +7,20 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
+require "model/accountModel.php";
+
 class AccountController extends AbstractController {
     /**
-     * Decide which page to show.
+     * Decide which account page to show.
+     * 
+     * @param array $uri The path of the page.
      */
-    public function invoke($uri) {
-        if (!isset($uri[1])) {
+    public function invoke() {
+        if (!isset($this->uri[1])) {
             return $this->detailsPage();
         }
-        else if (!isset($uri[2])) {
-            $pageMethod = $uri[1] . "Page";
-            if (method_exists($this, $pageMethod)) {
-                require "model/accountModel.php";
-                return $this->$pageMethod();
-            }
+        else if (!isset($this->uri[2])) {
+            $this->runPageMethod($this->uri[1]);
         }
         $this->showError(404, "Page Not Found", "The page you requested could not be found.");
     }

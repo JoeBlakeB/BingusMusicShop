@@ -12,8 +12,18 @@
          url("../fonts/OpenSans.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: UbuntuBold;
+    src: url("../fonts/UbuntuBold.woff") format("woff"),
+         url("../fonts/UbuntuBold.ttf") format("truetype");
+}
+
 :root, body, input[type="submit"] {
     font-family: OpenSans, helvetica, sans-serif;
+}
+
+h1 {
+    font-family: UbuntuBold, OpenSans, sans-serif;
 }
 
 :root, body {
@@ -217,6 +227,11 @@ header a {
     padding: 0 8px;
 }
 
+.centeredContent {
+    text-align: center;
+    padding: 0 16px;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
@@ -227,12 +242,12 @@ th, td {
     padding: 4px;
 }
 
-tr:not(.headerRow):hover {
+tbody tr:hover {
     background-color: #ddd;
     cursor: pointer;
 }
 
-td:not(.columnBig) {
+td:not(.big) {
     width: 1px;
     white-space: nowrap;
     text-align: center;

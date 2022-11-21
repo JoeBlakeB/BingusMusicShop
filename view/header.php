@@ -29,7 +29,7 @@
         <a href="#">
         <a href="<?php echo "/BingusMusicShop.php" .
             ((isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
-                "/admin/overview" : "/products/orders") ?>">
+                "/admin" : "/products/orders") ?>">
             <div class="headerButtonCenter">
                 <h3>
                     <?php echo (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?

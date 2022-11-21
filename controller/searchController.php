@@ -8,7 +8,7 @@
  */
 
 class SearchController extends AbstractController {
-    public function invoke($uri) {
+    public function invoke() {
         $this->showError(501, "Not Implemented", "I havent done this yet.");
     }
 }
