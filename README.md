@@ -2,15 +2,17 @@
 
 A modern web application using PHP and MySQL for A musical instrument retailer. Made for the Level 5 Web Programming Unit at Bournemouth University.
 
+The lab and tutorial tasks are available [here](https://github.com/JoeBlakeB/WebProgramming2022).
+
 ## SQL Database Setup
 
 ### Database Structure
 
-The database structure must be manually created before using the website. The CREATE script is in the `database.sql` file. It also incldes a command to create the admin user. The DROP commands are commented out at the bottom of the file.
+The database structure must be manually created before using the website. The CREATE script is in the `databaseStructure.sql` file in the `model` directory. It also incldes a command to create the admin user. The DROP commands are commented out at the bottom of the file.
 
-### SQL Credentials
+### Database Credentials
 
-The credentials for accessing a MySQL database should be stored in a file called `sqlCredentials.json` in inside the `include` directory in the following format:
+The credentials for accessing a MySQL database should be stored in a file called `databaseCredentials.json` in inside the `model` directory in the following format:
 
 ```json
 {

@@ -10,13 +10,18 @@
 abstract class AbstractController {
     abstract public function invoke($uri);
 
-    public function showError($errorCode, $errorTitle, $errorMessage) {
+    public static function showError($errorCode, $errorTitle, $errorMessage) {
         http_response_code($errorCode);
         require "view/error.php";
     }
 }
 
 class Controller extends AbstractController {
+    public function __construct() {
+        set_include_path("view");
+        session_start();
+    }
+
     /**
      * Decide which controller to use and invoke it or show an error.
      */
@@ -48,6 +53,7 @@ class Controller extends AbstractController {
         $uri = $_SERVER['REQUEST_URI'];
         $pos = strpos($uri, "BingusMusicShop.php");
         $uri = substr($uri, $pos + 20);
+        $uri = strstr($uri, "?", true) ?: $uri;
         $uri = explode("/", $uri);
         $uri = array_values(array_diff($uri, [""]));
         return $uri;

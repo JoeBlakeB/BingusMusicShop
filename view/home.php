@@ -2,9 +2,6 @@
 <html lang="en">
 
 <head>
-    <title>Bingus Music Shop</title>
-    <meta name="description" content="Bingus Music Shop">
-    <meta name="keywords" content="Bingus Music Shop">
     <?php require "head.php"; ?>
 </head>
 
