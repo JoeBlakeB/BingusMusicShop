@@ -19,7 +19,7 @@ class AccountModel extends AbstractModel {
      * Get an account by its email address.
      * 
      * @param string $email The email address of the account
-     * @return array The account
+     * @return Account The account
      */
     public function getAccountByEmail($email) {
         $email = strtolower($email);
@@ -30,14 +30,18 @@ class AccountModel extends AbstractModel {
             WHERE email = :email");
         $stmt->bindParam(":email", $email);
         $stmt->execute();
-        return $stmt->fetch();
+        $account = $stmt->fetch();
+        if ($account) {
+            return new Account($this->dbh, $account);
+        }
+        return null;
     }
 
     /**
      * Get an account by its ID.
      * 
      * @param int $accountID The ID of the account
-     * @return array The account
+     * @return Account The account
      */
     public function getAccountByID($accountID) {
         $stmt = $this->dbh->prepare(
@@ -47,28 +51,11 @@ class AccountModel extends AbstractModel {
             WHERE accountID = :accountID");
         $stmt->bindParam(":accountID", $accountID);
         $stmt->execute();
-        return $stmt->fetch();
-    }
-
-    /**
-     * See if an account is verified,
-     * and get the verification code if not.
-     * 
-     * @param int $accountID The accounts ID
-     * @return string the verification code if unverified
-     * @return bool false if verified
-     */
-    public function getVerificationCode($accountID) {
-        $stmt = $this->dbh->prepare(
-            "SELECT * FROM unverifiedAccounts 
-            WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $accountID);
-        $stmt->execute();
-        $unverifiedAccount = $stmt->fetch();
-        if (!is_null($unverifiedAccount)) {
-            return $unverifiedAccount["verificationCode"];
+        $account = $stmt->fetch();
+        if ($account) {
+            return new Account($this->dbh, $account);
         }
-        return false;
+        return null;
     }
 
     /**
@@ -109,19 +96,6 @@ class AccountModel extends AbstractModel {
     }
 
     /**
-     * Verify an account by deleting it from the unverifiedAccounts table.
-     * 
-     * @param int $accountID The ID of the account to verify
-     */
-    public function verifyAccount($accountID) {
-        $stmt = $this->dbh->prepare(
-            "DELETE FROM unverifiedAccounts
-            WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $accountID);
-        $stmt->execute();
-    }
-
-    /**
      * Get all accounts including unverified accounts.
      * 
      * @return array The accounts
@@ -133,36 +107,163 @@ class AccountModel extends AbstractModel {
             USING (accountID)
             ORDER BY isAdmin DESC, accountID");
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $this->createObjectArray($stmt->fetchAll(), $dbh, Account::class);
+    }
+}
+
+class Account implements ModelObjectInterface {
+    private $dbh;
+    private $id;
+    private $email;
+    private $passwordHash;
+    private $fullName;
+    private $isAdmin;
+    private $twoFactorEnabled;
+    private $verificationCode;
+    private $expires;
+
+    public function __construct(&$dbh, $data) {
+        $this->dbh = $dbh;
+        $this->id = $data["accountID"];
+        $this->email = $data["email"];
+        $this->passwordHash = $data["passwordHash"];
+        $this->fullName = $data["fullName"];
+        $this->isAdmin = $data["isAdmin"];
+        $this->twoFactorEnabled = $data["twoFactorEnabled"];
+        $this->verificationCode = $data["verificationCode"];
+        $this->expires = $data["expires"];
     }
 
     /**
-     * Set admin status for an account.
+     * @return int The ID of the account
+     */
+    public function getID() {
+        return $this->id;
+    }
+
+    /**
+     * @return bool Whether the account is admin
+     */
+    public function getIsAdmin() {
+        return !!$this->isAdmin;
+    }
+
+    /**
+     * @return bool Whether the account has two factor enabled
+     */
+    public function getIsTwoFactorEnabled() {
+        return !!$this->twoFactorEnabled;
+    }
+
+    /**
+     * @return string The email address escaped for HTML
+     */
+    public function getEmail() {
+        return htmlspecialchars($this->email);
+    }
+
+    /**
+     * @return string The original email address
+     */
+    public function getRealEmail() {
+        return $this->email;
+    }
+
+    /**
+     * @return string The full name escaped for HTML
+     */
+    public function getFullName() {
+        return htmlspecialchars($this->fullName);
+    }
+
+    /**
+     * If the account is unverified,
+     * get the verification code and expiry date.
      * 
-     * @param int $accountID Who to set admin status for
+     * @return array The verification code and expiry date
+     */
+    public function getIsUnverified() {
+        if (is_null($this->verificationCode)) {
+            return false;
+        }
+        return [
+            "code" => $this->verificationCode,
+            "expires" => $this->expires
+        ];
+    }
+
+    /**
+     * Verify the account by deleting it from the unverifiedAccounts table.
+     */
+    public function verify() {
+        $stmt = $this->dbh->prepare(
+            "DELETE FROM unverifiedAccounts
+            WHERE accountID = :accountID");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->execute();
+        $this->verificationCode = null;
+        $this->expires = null;
+    }
+
+    /**
+     * Delete the account from the database.
+     */
+    public function delete() {
+        $stmt = $this->dbh->prepare(
+            "DELETE FROM accounts
+            WHERE accountID = :accountID");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->execute();
+        $this->id = null;
+    }
+
+    /**
+     * Set admin status for the account.
+     * 
      * @param bool $isAdmin Whether to set admin status to true or false
      */
-    public function setAdmin($accountID, $isAdmin) {
+    public function setAdmin($isAdmin) {
         $stmt = $this->dbh->prepare(
             "UPDATE accounts
             SET isAdmin = :isAdmin
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $accountID);
+        $stmt->bindParam(":accountID", $this->id);
         $isAdmin = (int)$isAdmin;
         $stmt->bindParam(":isAdmin", $isAdmin);
         $stmt->execute();
+        $this->isAdmin = $isAdmin;
     }
 
     /**
-     * Delete an account.
+     * Check if the password matches the hash.
      * 
-     * @param int $accountID The account to delete
+     * @param string $password The password to check
+     * @return bool Whether the password matches the hash
      */
-    public function deleteAccount($accountID) {
-        $stmt = $this->dbh->prepare(
-            "DELETE FROM accounts
-            WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $accountID);
-        $stmt->execute();
+    public function verifyPassword($password) {
+        return password_verify($password, $this->passwordHash);
     }
 }
+
+
+
+    // /**
+    //  * See if an account is verified,
+    //  * and get the verification code if not.
+    //  * 
+    //  * @param int $accountID The accounts ID
+    //  * @return string the verification code if unverified
+    //  * @return bool false if verified
+    //  */
+    // public function getVerificationCode($accountID) {
+    //     $stmt = $this->dbh->prepare(
+    //         "SELECT * FROM unverifiedAccounts 
+    //         WHERE accountID = :accountID");
+    //     $stmt->bindParam(":accountID", $accountID);
+    //     $stmt->execute();
+    //     $unverifiedAccount = $stmt->fetch();
+    //     if (!is_null($unverifiedAccount)) {
+    //         return $unverifiedAccount["verificationCode"];
+    //     }
+    //     return false;
+    // }

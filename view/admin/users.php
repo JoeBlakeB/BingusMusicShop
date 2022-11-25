@@ -23,30 +23,32 @@
             echo "<p>$actionMessage</p>";
         }
 
-        if (isset($account) && !empty($account)) {
+        if (isset($account)) {
         ?>
-            <h2>Selected User: <?php echo htmlspecialchars($account["fullName"]); ?></h2>
-            <p>Account ID: <?= $account["accountID"]; ?></p>
-            <p>Email: <?= htmlspecialchars($account["email"]); ?></p>
-            <p>Admin: <?= $account["isAdmin"] ? "Yes" : "No"; ?></p>
-            <p>Verified: <?= !isset($account["verificationCode"]) ? "Yes" : "No"; ?></p>
+            <h2>Selected User: <?= $account->getFullName(); ?></h2>
+            <p>Account ID: <?= $account->getID(); ?></p>
+            <p>Email: <?= $account->getEmail(); ?></p>
+            <p>Admin: <?= $account->getIsAdmin() ? "Yes" : "No"; ?></p>
+            <?php $unverified = $account->getIsUnverified(); ?>
+            <p>Verified: <?= $unverified ? "No" : "Yes"; ?></p>
 
-            <?php if (isset($account["verificationCode"])) { ?>
-                <p>Verification Code: <?= $account["verificationCode"]; ?></p>
+            <?php if ($unverified) { ?>
+                <p>Verification Code: <?= $unverified["code"]; ?></p>
+                <p>Expires: <?= $unverified["expires"]; ?></p>
             <?php } ?>
 
-            <form action="users?accountID=<?= $account["accountID"]; ?>" method="post">
-                <?php if (isset($account["verificationCode"])) { ?>
+            <form action="users?accountID=<?= $account->getID(); ?>" method="post">
+                <?php if ($unverified) { ?>
                     <input type="submit" name="action" value="Verify User">
                 <?php }
-                if ($account["isAdmin"]) { ?>
+                if ($account->getIsAdmin()) { ?>
                     <input type="submit" name="action" value="Remove Admin">
                 <?php } else { ?>
                     <input type="submit" name="action" value="Make Admin">
                 <?php } ?>
                 <input type="submit" name="action" value="Delete User">
             </form>
-        <?php } else if (isset($account)) {
+        <?php } else if (isset($account) && is_null($account->getID())) {
             echo "<p>Account not found.</p>";
         } ?>
 
@@ -61,13 +63,13 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($accounts as $account) { ?>
-                    <tr onclick="window.location.href='<?= $this->basePath ?>/admin/users?accountID=<?= $account["accountID"] ?>'">
-                        <td><?= $account["accountID"]; ?></td>
-                        <td class="big"><?= htmlspecialchars($account["fullName"]); ?></td>
-                        <td class="big"><?= htmlspecialchars($account["email"]); ?></td>
-                        <td><?= $account["isAdmin"] ? "Yes" : "No"; ?></td>
-                        <td><?= !isset($account["verificationCode"]) ? "Yes" : "No"; ?></td>
+                <?php foreach ($allAccounts as $account) { ?>
+                    <tr onclick="window.location.href='<?= $this->basePath ?>/admin/users?accountID=<?= $account->getID(); ?>'">
+                        <td><?= $account->getID(); ?></td>
+                        <td class="big"><?= $account->getFullName(); ?></td>
+                        <td class="big"><?= $account->getEmail(); ?></td>
+                        <td><?= $account->getIsAdmin() ? "Yes" : "No"; ?></td>
+                        <td><?= $account->getIsUnverified() ? "No" : "Yes"; ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

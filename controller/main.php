@@ -33,16 +33,16 @@ abstract class AbstractController {
      * @param string $title The error title
      * @param string $message The error message
      */
-    public static function showError($errorCode, $errorTitle, $errorMessage) {
+    public function showError($errorCode, $errorTitle, $errorMessage) {
         http_response_code($errorCode);
-        require "view/error.php";
+        exit(require "view/error.php");
     }
 
     /**
      * 404 page not found, just runs showError with specific message.
      */
-    public static function pageNotFound() {
-        self::showError(404, "Page Not Found", "The page you requested could not be found.");
+    public function pageNotFound() {
+        $this->showError(404, "Page Not Found", "The page you requested could not be found.");
     }
 
     /**

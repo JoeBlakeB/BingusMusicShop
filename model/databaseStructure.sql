@@ -3,12 +3,12 @@
 -- Create tables
 
 CREATE TABLE IF NOT EXISTS accounts (
-    accountID       INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    email           VARCHAR(255) NOT NULL,
-    passwordHash    VARCHAR(60)  NOT NULL,
-    2faEnabled      BOOLEAN      NOT NULL DEFAULT FALSE,
-    isAdmin         BOOLEAN      NOT NULL DEFAULT FALSE,
-    fullName        VARCHAR(255),
+    accountID           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email               VARCHAR(255) NOT NULL,
+    passwordHash        VARCHAR(60)  NOT NULL,
+    twoFactorEnabled    BOOLEAN      NOT NULL DEFAULT FALSE,
+    isAdmin             BOOLEAN      NOT NULL DEFAULT FALSE,
+    fullName            VARCHAR(255),
     PRIMARY KEY (accountID),
     UNIQUE (email)
 );

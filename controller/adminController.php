@@ -16,7 +16,7 @@ class AdminController extends AbstractController {
      */
     public function invoke() {
         if (!isset($_SESSION["account"])) {
-            return header("Location: /BingusMusicShop.php/account/signin");
+            return header("Location: $this->basePath/account/signin");
         }
         if (!$_SESSION["account"]["isAdmin"]) {
             return $this->showError(403, "Forbidden", "You do not have permission to access this page.");
@@ -25,10 +25,7 @@ class AdminController extends AbstractController {
         if (!isset($this->uri[1])) {
             return $this->overview();
         }
-        else {
-            $this->runPageMethod($this->uri[1]);
-        }
-        $this->pageNotFound();
+        $this->runPageMethod($this->uri[1]);
     }
 
     /**
@@ -48,33 +45,6 @@ class AdminController extends AbstractController {
         $this->maxPathLength(2, $this->uri);
         require "model/accountModel.php";
         $accountModel = new AccountModel();
-
-        if (isset($_POST["action"]) && isset($_GET["accountID"])) {
-            switch ($_POST["action"]) {
-                case "Verify User":
-                    $accountModel->verifyAccount($_GET["accountID"]);
-                    $actionMessage = "Verified user #" . $_GET["accountID"];
-                    break;
-                case "Make Admin":
-                    $accountModel->setAdmin($_GET["accountID"], true);
-                    $actionMessage = "Made user #" . $_GET["accountID"] . " an admin.";
-                    break;
-                case "Remove Admin":
-                    $accountModel->setAdmin($_GET["accountID"], false);
-                    $actionMessage = "User #" . $_GET["accountID"] . " is no longer an admin.";
-                    break;
-                case "Delete User":
-                    $accountModel->deleteAccount($_GET["accountID"]);
-                    $actionMessage = "Deleted user #" . $_GET["accountID"];
-                    unset($_GET["accountID"]);
-                    break;
-                default:
-                    $actionMessage =  "Invalid action.";
-                    http_response_code(400);
-                    break;
-            }
-        }
-
         if (isset($_GET["accountID"])) {
             $account = $accountModel->getAccountByID($_GET["accountID"]);
             if ($account == null) {
@@ -82,8 +52,38 @@ class AdminController extends AbstractController {
             }
         }
 
-        $accounts = $accountModel->getAllAccounts();
+        try {
+            if (isset($_POST["action"]) && isset($_GET["accountID"])) {
+                switch ($_POST["action"]) {
+                    case "Verify User":
+                        $actionMessage = "Verified user #" . $account->getID();
+                        $account->verify();
+                        break;
+                    case "Make Admin":
+                        $actionMessage = "Made user #" . $account->getID() . " an admin.";
+                        $account->setAdmin(true);
+                        break;
+                    case "Remove Admin":
+                        $actionMessage = "User #" . $account->getID() . " is no longer an admin.";
+                        $account->setAdmin(false);
+                        break;
+                    case "Delete User":
+                        $actionMessage = "Deleted user #" . $account->getID();
+                        $account->delete();
+                        break;
+                    default:
+                        $actionMessage =  "Invalid action.";
+                        http_response_code(400);
+                        break;
+                }
+            }
+        }
+        catch (Exception $e) {
+            $actionMessage = "An error occured while performing that action.";
+            http_response_code(500);
+        }
+
+        $allAccounts = $accountModel->getAllAccounts();
         require "admin/users.php";
     }
 }
-

@@ -48,21 +48,21 @@ class AccountController extends AbstractController {
             try {
                 $model = new AccountModel();
                 $account = $model->getAccountByEmail($_POST["email"]);
-                if ($account && password_verify($_POST["password"], $account["passwordHash"])) {
+                if ($account && $account->verifyPassword($_POST["password"])) {
                     session_unset();
 
                     // In unverified, redirect to verification page
-                    $verificationCode = $model->getVerificationCode($account["accountID"]);
-                    if ($verificationCode) {
+                    $unverified = $account->getIsUnverified();
+                    if ($unverified) {
                         $_SESSION["verification"] = [
-                            "email" => $account["email"],
-                            "code" => $verificationCode
+                            "email" => $account->getRealEmail(),
+                            "code" => $unverified["code"],
                         ];
                         return header("Location: verification");
                     }
 
                     // If 2fa is enabled, redirect to 2fa page
-                    if ($account["2faEnabled"]) {
+                    if ($account->getIsTwoFactorEnabled()) {
                         $this->send2faCode($_POST["email"]);
                         return header("Location: authentication");
                     }
@@ -193,14 +193,12 @@ class AccountController extends AbstractController {
                 try {
                     $model = new AccountModel();
                     $account = $model->getAccountByEmail($submit["email"]);
-                    $verificationCode = $model->getVerificationCode($account["accountID"]);
-                    if ($verificationCode == $submit["code"]) {
-                        $model->verifyAccount($account["accountID"]);
-                        $model = null;
+                    $unverified = $account->getIsUnverified();
+                    if ($unverified && $unverified["code"] == $submit["code"]) {
+                        $account->verify();
                         return $this->signIn($account);
                     }
                     else {
-                        $model = null;
                         $error = "The verification code you entered is incorrect.";
                         http_response_code(401);
                     }
@@ -246,13 +244,13 @@ class AccountController extends AbstractController {
     /**
      * Set the session to the account details.
      * 
-     * @param array $account The account record
+     * @param Account $account The account record
      */
     public function signIn($account) {
         $_SESSION["account"] = [
-            "fullName" => $account["fullName"],
-            "email" => $account["email"],
-            "isAdmin" => $account["isAdmin"]
+            "fullName" => $account->getFullName(),
+            "email" => $account->getEmail(),
+            "isAdmin" => $account->getIsAdmin()
         ];
         header("Location: .");
     }

@@ -42,7 +42,8 @@ abstract class AbstractModel {
             );
         }
         catch (PDOException $e) {
-            AbstractController::showError(503, "Database Connection Failed", "We are unable to access the database. Please try again later.");
+            global $controller;
+            $controller->showError(503, "Database Connection Failed", "We are unable to access the database. Please try again later.");
             header("Retry-After: 10");
             exit();
         }
@@ -54,4 +55,28 @@ abstract class AbstractModel {
     public function __destruct() {
         $this->db = null;
     }
+
+    /**
+     * Create an array of objects from an array from the database.
+     * 
+     * @param array $items The items from the database.
+     * @return array The items as objects.
+     */
+    public function createObjectArray($items, &$dbh, $class) {
+        $itemArray = [];
+        foreach ($items as $item) {
+            $itemArray[] = new $class($dbh, $item);
+        }
+        return $itemArray;
+    }
+}
+
+interface ModelObjectInterface {
+    /**
+     * Take the output from the database and create an object.
+     * 
+     * @param dbh $dbh The database connection
+     * @param array $data The row from the database.
+     */
+    public function __construct(&$dbh, $data);
 }
