@@ -19,10 +19,8 @@ class AccountController extends AbstractController {
         if (!isset($this->uri[1])) {
             return $this->detailsPage();
         }
-        else if (!isset($this->uri[2])) {
-            $this->runPageMethod($this->uri[1]);
-        }
-        $this->showError(404, "Page Not Found", "The page you requested could not be found.");
+        $this->maxPathLength(2);
+        $this->runPageMethod($this->uri[1]);
     }
 
     /**
@@ -318,7 +316,8 @@ class AccountController extends AbstractController {
     public function sendVerificationEmail($email, $verificationCode) {
         $subject = "Bingus Music Shop Account Verification";
         $message = "Your verification code is: $verificationCode\n" .
-            "Please go to https://s5411045.bucomputing.uk/BingusMusicShop.php/account/verification?code=$verificationCode&email=" .
+            "Please go to https://" . $_SERVER["HTTP_HOST"] . $this->basePath . 
+            "/account/verification?code=$verificationCode&email=" . 
             rtrim(base64_encode($email), "=") . 
             " to verify your account.\nThe code is valid for 24 hours.";
         mail($email, $subject, $message);

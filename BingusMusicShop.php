@@ -8,5 +8,5 @@
  */
 
 require "controller/main.php";
-$controller = new Controller();
+$controller = new Controller("/BingusMusicShop.php");
 $controller->invoke();

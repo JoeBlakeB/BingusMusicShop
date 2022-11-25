@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
-    <title>Users</title>
-    <meta name="description" content="Bingus Music Shop Users Admin">
-    <meta name="keywords" content="Bingus Music Shop, Users, Admin">
-    <?php require "head.php"; ?>
+    <?php
+    $title = "Users - Admin";
+    require "head.php";
+    ?>
 </head>
 
 <body>
     <?php require "header.php"; ?>
 
     <div class="basicContent">
-        <h1>Users</h1>
+        <h1>Admin - Users</h1>
 
         <a href="." class="button">
             <p>Back to Admin Overview</p>
@@ -41,14 +41,12 @@
                 <?php }
                 if ($account["isAdmin"]) { ?>
                     <input type="submit" name="action" value="Remove Admin">
-                <?php }
-                else { ?>
+                <?php } else { ?>
                     <input type="submit" name="action" value="Make Admin">
                 <?php } ?>
                 <input type="submit" name="action" value="Delete User">
             </form>
-        <?php }
-        else if (isset($account)) {
+        <?php } else if (isset($account)) {
             echo "<p>Account not found.</p>";
         } ?>
 
@@ -64,14 +62,13 @@
             </thead>
             <tbody>
                 <?php foreach ($accounts as $account) { ?>
-                    <tr onclick="window.location.href='/BingusMusicShop.php/admin/users?accountID=<?= $account["accountID"] ?>'">
+                    <tr onclick="window.location.href='<?= $this->basePath ?>/admin/users?accountID=<?= $account["accountID"] ?>'">
                         <td><?= $account["accountID"]; ?></td>
                         <td class="big"><?= htmlspecialchars($account["fullName"]); ?></td>
                         <td class="big"><?= htmlspecialchars($account["email"]); ?></td>
                         <td><?= $account["isAdmin"] ? "Yes" : "No"; ?></td>
                         <td><?= !isset($account["verificationCode"]) ? "Yes" : "No"; ?></td>
                     </tr>
-
                 <?php } ?>
             </tbody>
         </table>

@@ -14,9 +14,11 @@ abstract class AbstractController {
      * Create a new controller.
      * 
      * @param array $uri The URI of the page.
+     * @param string $basePath The base path of the page.
      */
-    public function __construct($uri) {
+    public function __construct($uri, $basePath) {
         $this->uri = $uri;
+        $this->basePath = $basePath;
     }
 
     /**
@@ -47,6 +49,7 @@ abstract class AbstractController {
      * Run a pages method if it exists.
      * For example, for the page "account/signin",
      * the method would be "signinPage".
+     * 404 if the method does not exist.
      * 
      * @param string $name The name of the page
      * @param string $suffix The suffix of the method, default is "Page"
@@ -54,8 +57,9 @@ abstract class AbstractController {
     public function runPageMethod($name, $suffix = "Page") {
         $pageMethod = $name . $suffix;
         if (method_exists($this, $pageMethod)) {
-            exit($this->$pageMethod());
+            return $this->$pageMethod();
         }
+        $this->pageNotFound();
     }
 
     /**
@@ -71,22 +75,31 @@ abstract class AbstractController {
 }
 
 class Controller extends AbstractController {
-    public function __construct() {
+    /**
+     * Set variables and start session.
+     * 
+     * @param string $basePath The php file at the root of the site.
+     */
+    public function __construct($basePath) {
+        $this->basePath = $basePath;
         set_include_path("view");
+        session_name("BingusMusicShopID");
         session_start();
     }
 
     /**
      * Decide which controller to use and invoke it or show an error.
+     * 
+     * @param array $uri The URI of the page.
      */
-    public function invoke($uri=null) {
+    public function invoke() {
         $uri = $this->getUri();
         try {
             $controller = isset($uri[0]) ? $uri[0] : "home";
             $controller = $controller . "Controller";
             if (file_exists("controller/$controller.php")) {
                 require "controller/$controller.php";
-                $controller = new $controller($uri);
+                $controller = new $controller($uri, $this->basePath);
                 $controller->invoke();
             }
             else {
@@ -105,7 +118,7 @@ class Controller extends AbstractController {
      */
     public function getUri() {
         $uri = $_SERVER['REQUEST_URI'];
-        $pos = strpos($uri, "BingusMusicShop.php");
+        $pos = strpos($uri, $this->basePath);
         $uri = substr($uri, $pos + 20);
         $uri = strstr($uri, "?", true) ?: $uri;
         $uri = explode("/", $uri);

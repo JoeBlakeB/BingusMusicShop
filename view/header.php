@@ -1,6 +1,6 @@
 <header>
     <div id="headerName">
-        <a href="/BingusMusicShop.php">
+        <a href="<?= $this->basePath ?>">
             <img height="64px" src="/static/images/Logo.png" alt="Logo">
             <h1>Bingus Music Shop</h1>
         </a>
@@ -14,25 +14,25 @@
     </div>
     <button onclick="document.querySelector('header').classList.toggle('showDropdown')" id="headerButtonsDropdown"><i class="fa-solid fa-bars"></i></button>
     <div id="headerButtons">
-        <a href="<?php echo "/BingusMusicShop.php/account/" . 
-            (isset($_SESSION["account"]) ? "" : "signin") ?>">
+        <a href="<?= "$this->basePath/account/" . 
+            (isset($_SESSION["account"]) ? "" : "signin"); ?>">
             <div>
-                <h3><?php echo (
+                <h3><?= (
                     isset($_SESSION["account"]) ?
                     "Account" : "Sign In"); ?></h3>
-                <p><?php echo (
+                <p><?= (
                     isset($_SESSION["account"]) ?
                     $_SESSION["account"]["fullName"] :
                     "or Register"); ?></p>
             </div>
         </a>
         <a href="#">
-        <a href="<?php echo "/BingusMusicShop.php" .
+        <a href="<?= $this->basePath .
             ((isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
-                "/admin" : "/products/orders") ?>">
+                "/admin" : "/products/orders"); ?>">
             <div class="headerButtonCenter">
                 <h3>
-                    <?php echo (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
+                    <?= (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
                         "Admin" : "Orders"; ?></h3>
             </div>
         </a>

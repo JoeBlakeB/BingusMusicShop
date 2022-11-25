@@ -14,7 +14,7 @@
         <h1>Account Details</h1>
         You are signed in as <?php echo $_SESSION["account"]["fullName"]; ?>.
         <br>
-        <a href="/BingusMusicShop.php/account/signout">Sign out</a>
+        <a href="<?= $this->basePath ?>/account/signout">Sign out</a>
     </div>
 </body>
 

@@ -24,8 +24,10 @@ The credentials for accessing a MySQL database should be stored in a file called
 }
 ```
 
-## Refrences
+## References
   - Font Awesome 6.2.0, available at [FontAwesome.com](https://fontawesome.com/), [License](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/static/fontawesome/LICENSE.txt).
   - FredokaOne Font, by Milena Brandao, available at [Google Fonts](https://fonts.google.com/specimen/Fredoka+One), [License](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/static/fonts/FredokaOne.txt).
+  - Open Sans Font, by Steve Matteson, available at [Google Fonts](https://fonts.google.com/specimen/Open+Sans), [License](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/static/fonts/OpenSans.txt).
+  - Ubuntu Font, by Dalton Maag, available at [Google Fonts](https://fonts.google.com/specimen/Ubuntu), [License](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/static/fonts/UbuntuBold.txt).
 
 Copyright (c) 2022 JoeBlakeB (Joe Baker), All Rights Reserved.
