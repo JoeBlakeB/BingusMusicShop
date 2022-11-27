@@ -107,7 +107,7 @@ class AccountModel extends AbstractModel {
             USING (accountID)
             ORDER BY isAdmin DESC, accountID");
         $stmt->execute();
-        return $this->createObjectArray($stmt->fetchAll(), $dbh, Account::class);
+        return $this->createObjectArray($stmt->fetchAll(), Account::class);
     }
 }
 
@@ -244,26 +244,3 @@ class Account implements ModelObjectInterface {
         return password_verify($password, $this->passwordHash);
     }
 }
-
-
-
-    // /**
-    //  * See if an account is verified,
-    //  * and get the verification code if not.
-    //  * 
-    //  * @param int $accountID The accounts ID
-    //  * @return string the verification code if unverified
-    //  * @return bool false if verified
-    //  */
-    // public function getVerificationCode($accountID) {
-    //     $stmt = $this->dbh->prepare(
-    //         "SELECT * FROM unverifiedAccounts 
-    //         WHERE accountID = :accountID");
-    //     $stmt->bindParam(":accountID", $accountID);
-    //     $stmt->execute();
-    //     $unverifiedAccount = $stmt->fetch();
-    //     if (!is_null($unverifiedAccount)) {
-    //         return $unverifiedAccount["verificationCode"];
-    //     }
-    //     return false;
-    // }

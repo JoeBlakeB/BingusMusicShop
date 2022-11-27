@@ -15,7 +15,7 @@
         <h1>Admin - Overview</h1>
 
         <h2>Products</h2>
-        NOT IMPLEMENTED
+        <a href="<?= $this->basePath ?>/admin/products">All Products</a>
 
         <h2>Users</h2>
         <a href="<?= $this->basePath ?>/admin/users">Users</a>

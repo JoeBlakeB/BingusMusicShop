@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS products (
     name        VARCHAR(255) NOT NULL,
     description TEXT,
     price       DECIMAL(7,2) NOT NULL,
-    discount    TINYINT UNSIGNED,
     stock       INT UNSIGNED NOT NULL,
     PRIMARY KEY (productID)
 );

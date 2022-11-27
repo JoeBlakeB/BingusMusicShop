@@ -189,25 +189,24 @@ class AccountController extends AbstractController {
                 $precheck = true;
             }
             // Check the code and sign in if it is correct
-            if ($precheck) {
-                try {
+            try {
+                if ($precheck) {
                     $model = new AccountModel();
                     $account = $model->getAccountByEmail($submit["email"]);
                     $unverified = $account->getIsUnverified();
-                    if ($unverified && $unverified["code"] == $submit["code"]) {
+                    if (($unverified && $unverified["code"] == $submit["code"]) || !$unverified) {
                         $account->verify();
                         return $this->signIn($account);
                     }
-                    else {
-                        $error = "The verification code you entered is incorrect.";
-                        http_response_code(401);
-                    }
                 }
-                catch (PDOException $e) {
-                    $error = "An error occurred while verifying your account. Please try again later.";
-                    http_response_code(500);
-                }
+                $error = "The verification code you entered is incorrect.";
+                http_response_code(401);
             }
+            catch (PDOException $e) {
+                $error = "An error occurred while verifying your account. Please try again later.";
+                http_response_code(500);
+            }
+            
         }
 
         $alreadyHaveEmail = isset($_SESSION["verification"]["email"]);

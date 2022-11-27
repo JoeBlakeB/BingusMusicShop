@@ -86,4 +86,98 @@ class AdminController extends AbstractController {
         $allAccounts = $accountModel->getAllAccounts();
         require "admin/users.php";
     }
+
+    /**
+     * Select which products management page to show
+     * all, new, and edit.
+     */
+    public function productsPage() {
+        $this->maxPathLength(3, $this->uri);
+        if (!isset($this->uri[2])) {
+            return $this->productsAll();
+        }
+        $this->runPageMethod($this->uri[2], "PageProducts");
+    }
+
+    /**
+     * Show the page to view all products.
+     */
+    public function productsAll() {
+        require "model/productModel.php";
+        $productModel = new ProductModel();
+        $products = $productModel->getAllProducts();
+        require "admin/products/all.php";
+    }
+
+    /**
+     * Show the page to add a new product.
+     */
+    public function newPageProducts() {
+        echo "New product";
+        // require "admin/productsNew.php";
+    }
+
+    /**
+     * Show the page to edit a product.
+     */
+    public function editPageProducts() {
+        require "model/productModel.php";
+        $productModel = new ProductModel();
+        $product = $productModel->getProductByID($_GET["id"]);
+        if ($product == null) {
+            $this->pageNotFound();
+        }
+        if (!empty($_POST)) {
+            $valid = $this->validateProduct($_POST);
+            if ($valid[0]) {
+                $error = $product->update($_POST);
+                if ($error === null) {
+                    $success = "Product updated successfully.";
+                }
+            }
+            else {
+                $error = "Invalid product details. <noscript>Enable JavaScript to see errors.</noscript>";
+                http_response_code(400);
+            }
+        }
+        else {
+            $valid = [
+                "name" => true,
+                "description" => true,
+                "price" => true,
+                "stock" => true
+            ];
+        }
+        require "admin/products/edit.php";
+    }
+
+    /**
+     * Validate the product data.
+     * 
+     * @param array $data The data to validate.
+     * @return array of bools for each field.
+     */
+    private function validateProduct($data) {
+        $valid = [];
+        $valid["name"] = (
+            strlen($data["name"]) > 0 &&
+            strlen($data["name"]) < 255);
+        $valid["description"] = (
+            strlen($data["description"]) < 2 ** 16 - 1);
+        $valid["price"] = (
+            is_numeric($data["price"]) &&
+            $data["price"] > 0 &&
+            $data["price"] < 10 ** 7);
+        $valid["stock"] = (
+            is_numeric($data["stock"]) &&
+            $data["stock"] >= 0 &&
+            $data["stock"] < 10 ** 7);
+        $valid[0] = (
+            $valid["name"] &&
+            $valid["description"] &&
+            $valid["price"] &&
+            $valid["stock"]);
+        return $valid;
+    }
 }
+

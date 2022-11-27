@@ -7,8 +7,10 @@
 
 <body>
     <?php require "header.php"; ?>
-    <h1>Bingus Music Shop</h1>
-    <p>Welcome to Bingus Music Shop.</p>
+    <div class="basicContent">
+        <h1>Bingus Music Shop</h1>
+        <p>Welcome to Bingus Music Shop.</p>
+    </div>
 </body>
 
 </html>

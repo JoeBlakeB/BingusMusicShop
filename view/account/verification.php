@@ -21,10 +21,10 @@
             <h1><?= ($formType == "signin") ? "Two Factor Authentication" : "Verify Your Account"; ?></h1>
             
             <?php
-                if (isset($errorMsg)) {
+                if (isset($error)) {
                     ?>
                     <div class="error"><p>
-                        <?php echo $errorMsg; ?>
+                        <?php echo $error; ?>
                     </p></div>
                     <?php
                 }

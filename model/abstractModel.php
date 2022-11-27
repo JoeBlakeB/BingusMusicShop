@@ -62,10 +62,10 @@ abstract class AbstractModel {
      * @param array $items The items from the database.
      * @return array The items as objects.
      */
-    public function createObjectArray($items, &$dbh, $class) {
+    public function createObjectArray($items, $class) {
         $itemArray = [];
         foreach ($items as $item) {
-            $itemArray[] = new $class($dbh, $item);
+            $itemArray[] = new $class($this->dbh, $item);
         }
         return $itemArray;
     }

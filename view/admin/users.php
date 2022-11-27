@@ -14,9 +14,9 @@
     <div class="basicContent">
         <h1>Admin - Users</h1>
 
-        <a href="." class="button">
-            <p>Back to Admin Overview</p>
-        </a>
+        <p><a href=".." class="button">
+            Back to Admin Overview
+        </a></p>
 
         <?php
         if (isset($actionMessage)) {
@@ -48,6 +48,7 @@
                 <?php } ?>
                 <input type="submit" name="action" value="Delete User">
             </form>
+            <br>
         <?php } else if (isset($account) && is_null($account->getID())) {
             echo "<p>Account not found.</p>";
         } ?>
