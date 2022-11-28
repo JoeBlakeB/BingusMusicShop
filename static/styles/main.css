@@ -18,7 +18,7 @@
          url("../fonts/UbuntuBold.ttf") format("truetype");
 }
 
-:root, body, input[type="submit"] {
+:root, body, input, textarea {
     font-family: OpenSans, helvetica, sans-serif;
 }
 
@@ -221,10 +221,15 @@ header a {
 
 /* Content Layout */
 
-.basicContent {
+.basicContent, .productEditForm {
     margin: 0 auto;
     max-width: 1200px;
     padding: 0 8px;
+    overflow-x: auto;
+}
+
+.basicContent a {
+    width: min-content;
 }
 
 .centeredContent {
@@ -251,4 +256,71 @@ td:not(.big) {
     width: 1px;
     white-space: nowrap;
     text-align: center;
+}
+
+/* Form */
+
+.productEditForm input {
+    font-size: 16px;
+}
+
+.productEditForm textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 6em;
+    max-height: 32em;
+}
+
+.productEditForm input:not(#price),
+.productEditForm textarea {
+    border: 1px solid #8f8f9d;
+    padding: 4px;
+    margin: 4px 0;
+}
+
+.grid.threeColumns {
+    display: grid;
+    grid-template-columns: 5fr 2fr 2fr;
+    grid-gap: 0 8px;
+}
+
+@media screen and (max-width: 800px) {
+    .grid.threeColumns {
+        grid-template-columns: 1fr;
+    }
+}
+
+.grid input {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.priceInput {
+    border: 1px solid #8f8f9d;
+    font-size: 16px;
+    padding: 4px;
+}
+
+.priceInput input {
+    margin: 8px 0;
+    border: 0;
+    width: calc(100% - 24px);
+}
+
+.inputError input,
+.inputError textarea,
+.inputError .priceInput {
+    background-color: #ffd0d0;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.success {
+    color: green;
+    font-weight: bold;
 }

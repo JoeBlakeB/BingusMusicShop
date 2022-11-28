@@ -19,7 +19,7 @@ form.addEventListener("submit", function (event) {
 // Product name input
 function verifyName() {
     let value = nameContainer.children[1].value.trim();
-    let valid = value.length > 0 && value.length < 255;
+    let valid = value.length > 0 && value.length <= 128;
     nameContainer.classList.toggle("inputError", !valid);
     return valid;
 }

@@ -14,8 +14,12 @@
     <div class="basicContent">
         <h1>Admin - All Products</h1>
 
-        <p><a href=".." class="button">
+        <p><a href="<?= $this->basePath ?>/admin/" class="button">
             Back to Admin Overview
+        </a></p>
+
+        <p><a href="<?= $this->basePath ?>/admin/products/new" class="button">
+            Add a New Product
         </a></p>
 
         <table>

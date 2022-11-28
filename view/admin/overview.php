@@ -15,7 +15,9 @@
         <h1>Admin - Overview</h1>
 
         <h2>Products</h2>
-        <a href="<?= $this->basePath ?>/admin/products">All Products</a>
+        <a href="<?= $this->basePath ?>/admin/products">View all Products</a>
+        <br>
+        <a href="<?= $this->basePath ?>/admin/products/new">Add a New Product</a>
 
         <h2>Users</h2>
         <a href="<?= $this->basePath ?>/admin/users">Users</a>

@@ -46,6 +46,28 @@ class ProductModel extends AbstractModel {
         }
         return null;
     }
+
+    /**
+     * Create a new product
+     * 
+     * @param string $name The name of the product.
+     * @param string $description The description of the product.
+     * @param float $price The price of the product.
+     * @param int $stock The stock of the product.
+     * @return Product The product as an object.
+     */
+    public function createProduct($name, $description, $price, $stock) {
+        $stmt = $this->dbh->prepare(
+            "INSERT INTO products (name, description, price, stock)
+            VALUES (:name, :description, :price, :stock);");
+        $stmt->execute([
+            "name" => $name,
+            "description" => $description,
+            "price" => $price,
+            "stock" => $stock
+        ]);
+        return $this->getProductByID($this->dbh->lastInsertId());
+    }
 }
 
 
@@ -154,5 +176,31 @@ class Product implements ModelObjectInterface {
         $this->price = $data["price"];
         $this->stock = $data["stock"];
         return null;
+    }
+
+    /** 
+     * Set the stock of a product, used when
+     * an order is placed and when the product is hidden.
+     */
+    public function setStock($stock) {
+        $stmt = $this->dbh->prepare(
+            "UPDATE products
+            SET stock = :stock
+            WHERE productID = :productID;");
+        $stmt->execute([
+            "stock" => $stock,
+            "productID" => $this->id
+        ]);
+        $this->stock = $stock;
+    }
+
+    /**
+     * Delete the product.
+     */
+    public function delete() {
+        $stmt = $this->dbh->prepare(
+            "DELETE FROM products
+            WHERE productID = :productID;");
+        $stmt->execute(["productID" => $this->id]);
     }
 }

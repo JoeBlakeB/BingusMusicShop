@@ -113,8 +113,26 @@ class AdminController extends AbstractController {
      * Show the page to add a new product.
      */
     public function newPageProducts() {
-        echo "New product";
-        // require "admin/productsNew.php";
+        if (!empty($_POST)) {
+            $valid = $this->validateProduct($_POST);
+            if ($valid[0]) {
+                require "model/productModel.php";
+                $productModel = new ProductModel();
+                $product = $productModel->createProduct($_POST["name"], $_POST["description"], $_POST["price"], $_POST["stock"]);
+                if ($product == null) {
+                    $error = "An error occured while creating the product.";
+                    http_response_code(500);
+                } else {
+                    return header("Location: $this->basePath/admin/products/edit?new=true&id=" . $product->getID());
+                }
+            }
+            else {
+                $error = "Invalid product details. <noscript>Enable JavaScript to see errors.</noscript>";
+                http_response_code(400);
+            }
+        }
+        $edit = false;
+        require "admin/products/edit.php";
     }
 
     /**
@@ -140,14 +158,7 @@ class AdminController extends AbstractController {
                 http_response_code(400);
             }
         }
-        else {
-            $valid = [
-                "name" => true,
-                "description" => true,
-                "price" => true,
-                "stock" => true
-            ];
-        }
+        $edit = true;
         require "admin/products/edit.php";
     }
 
@@ -161,7 +172,7 @@ class AdminController extends AbstractController {
         $valid = [];
         $valid["name"] = (
             strlen($data["name"]) > 0 &&
-            strlen($data["name"]) < 255);
+            strlen($data["name"]) <= 128);
         $valid["description"] = (
             strlen($data["description"]) < 2 ** 16 - 1);
         $valid["price"] = (
@@ -178,6 +189,33 @@ class AdminController extends AbstractController {
             $valid["price"] &&
             $valid["stock"]);
         return $valid;
+    }
+
+    /**
+     * Delete a product.
+     */
+    public function deletePageProducts() {
+        require "model/productModel.php";
+        $productModel = new ProductModel();
+        $product = $productModel->getProductByID($_GET["id"]);
+        if ($product == null) {
+            $this->pageNotFound();
+        }
+        if (isset($_GET["confirm"])) {
+            $product->delete();
+            try {
+                return header("Location: $this->basePath/admin/products");
+            }
+            catch (PDOException $e) {
+                $error = "An error occured while deleting the product.";
+                http_response_code(500);
+            }
+        }
+        else if (isset($_GET["hide"])) {
+            $product->setStock(0);
+            return header("Location: $this->basePath/admin/products");
+        }
+        require "admin/products/delete.php";
     }
 }
 

@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS unverifiedAccounts (
 
 CREATE TABLE IF NOT EXISTS products (
     productID   INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name        VARCHAR(255) NOT NULL,
+    name        VARCHAR(128) UNIQUE NOT NULL,
     description TEXT,
     price       DECIMAL(7,2) NOT NULL,
     stock       INT UNSIGNED NOT NULL,
