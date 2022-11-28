@@ -1,7 +1,5 @@
 // Copyright (c) 2022 JoeBlakeB, all rights reserved.
 
-"use strict";
-
 let form = document.getElementsByTagName("form")[0];
 
 // Do not allow the form to be submitted if the data is invalid

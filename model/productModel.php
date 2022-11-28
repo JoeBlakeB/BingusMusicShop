@@ -68,6 +68,24 @@ class ProductModel extends AbstractModel {
         ]);
         return $this->getProductByID($this->dbh->lastInsertId());
     }
+
+    /**
+     * Store an images metadata in the database.
+     * 
+     * @param int $productID The id of the product.
+     * @param string $fileHash The images file hash
+     * @param string $fileType The images file type
+     */
+    public function addImage($productID, $image, $type) {
+        $stmt = $this->dbh->prepare(
+            "INSERT INTO images (productID, fileHash, fileType)
+            VALUES (:productID, :fileHash, :fileType);");
+        $stmt->execute([
+            "productID" => $productID,
+            "fileHash" => $image,
+            "fileType" => $type
+        ]);
+    }
 }
 
 
@@ -138,6 +156,24 @@ class Product implements ModelObjectInterface {
      */
     public function getImageCount() {
         return $this->imageCount;
+    }
+
+    /**
+     * Get the images for the product.
+     * 
+     * @return array An array of arrays containing the images metadata.
+     */
+    public function getImages() {
+        $stmt = $this->dbh->prepare(
+            "SELECT * FROM images
+            WHERE productID = :productID
+            ORDER BY imageID DESC;");
+        $stmt->execute(["productID" => $this->id]);
+        $images = $stmt->fetchAll();
+        foreach ($images as &$image) {
+            $image["url"] = "/images/" . $image["fileHash"] . "." . $image["fileType"];
+        }
+        return $images;
     }
 
     /**

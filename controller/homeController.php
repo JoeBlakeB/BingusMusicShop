@@ -11,7 +11,8 @@ class HomeController extends AbstractController {
     public function invoke() {
         if (empty($this->uri)) {
             require "view/home.php";
-        } else {
+        }
+        else {
             $this->showError(404, "Page Not Found", "The page you requested could not be found.");
         }
     }

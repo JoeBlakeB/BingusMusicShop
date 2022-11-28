@@ -72,6 +72,19 @@ abstract class AbstractController {
             exit($this->pageNotFound());
         }
     }
+
+    /**
+     * Respond with a JSON
+     * 
+     * @param array $data The data to send
+     * @param int $http The http response code
+     */
+    public function respondWithJson($data, $http = 200) {
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code($http);
+        echo json_encode($data);
+        exit();
+    }
 }
 
 class Controller extends AbstractController {

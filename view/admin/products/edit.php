@@ -100,8 +100,22 @@
     <?php if ($edit) { ?>
     <div class="basicContent">
         <h2>Images</h2>
-        <p>TODO</p>
+        <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" name="imageInput" id="imageInput" productID="<?= $product->getID(); ?>">
+        <div id="imageList">
+            <?php
+            $images = $product->getImages();
+            foreach ($images as $image) { ?>
+                <div class="uploadedImage" id="image-<?= $image["imageID"]; ?>">
+                    <img src="<?= $image["url"]; ?>" alt="Image #<?= $image["imageID"]; ?>">
+                    <div class="uploadedImageButtons">
+                        <button class="button" onclick="deleteImage(<?= $image["imageID"]; ?>);">Delete</button>
+                        <button class="button" onclick="setPrimaryImage(<?= $image["imageID"]; ?>)">Set as Primary</button>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
     </div>
+    <script src="/static/scripts/imageManagement.js"></script>
     <?php } ?>
 </body>
 
