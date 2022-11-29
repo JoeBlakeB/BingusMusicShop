@@ -217,5 +217,30 @@ class AdminController extends AbstractController {
         }
         require "admin/products/delete.php";
     }
+
+    /**
+     * Delete an image or make it the main image.
+     */
+    public function imagePageProducts() {
+        if (!isset($_GET["imageID"]) || !isset($_GET["action"])) {
+            $this->pageNotFound();
+        }
+        try {
+            require "model/productModel.php";
+            $productModel = new ProductModel();
+            if ($_GET["action"] == "delete") {
+                $productModel->deleteImage($_GET["imageID"]);
+            }
+            else {
+                $productModel->setMainImage($_GET["imageID"]);
+            }
+            $this->respondWithJson(["success" => true]);
+        }
+        catch (PDOException $e) {
+            $this->respondWithJson([
+                "success" => false
+            ], 500);
+        }
+    }
 }
 

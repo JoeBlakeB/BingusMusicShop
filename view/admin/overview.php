@@ -15,12 +15,11 @@
         <h1>Admin - Overview</h1>
 
         <h2>Products</h2>
-        <a href="<?= $this->basePath ?>/admin/products">View all Products</a>
-        <br>
-        <a href="<?= $this->basePath ?>/admin/products/new">Add a New Product</a>
+        <p><a class="button" href="<?= $this->basePath ?>/admin/products">View all Products</a></p>
+        <p><a class="button" href="<?= $this->basePath ?>/admin/products/new">Add a New Product</a></p>
 
         <h2>Users</h2>
-        <a href="<?= $this->basePath ?>/admin/users">Users</a>
+        <p><a class="button" href="<?= $this->basePath ?>/admin/users">Users</a></p>
 
         <h2>Orders</h2>
         NOT IMPLEMENTED

@@ -14,7 +14,7 @@
     <div class="basicContent">
         <h1>Admin - Users</h1>
 
-        <p><a href=".." class="button">
+        <p><a href="." class="button">
             Back to Admin Overview
         </a></p>
 

@@ -73,8 +73,9 @@ class ProductModel extends AbstractModel {
      * Store an images metadata in the database.
      * 
      * @param int $productID The id of the product.
-     * @param string $fileHash The images file hash
-     * @param string $fileType The images file type
+     * @param string $fileHash The images file hash.
+     * @param string $fileType The images file type.
+     * @return int The id of the image.
      */
     public function addImage($productID, $image, $type) {
         $stmt = $this->dbh->prepare(
@@ -85,13 +86,50 @@ class ProductModel extends AbstractModel {
             "fileHash" => $image,
             "fileType" => $type
         ]);
+        return $this->dbh->lastInsertId();
+    }
+
+    /**
+     * Delete an images from the database, and delete the file
+     * if it is not used by another product.
+     * 
+     * @param int $imageID The id of the image.
+     */
+    public function deleteImage($imageID) {
+        $stmt = $this->dbh->prepare(
+            "SELECT fileHash, fileType FROM images
+            WHERE imageID = :imageID;
+            DELETE FROM images WHERE imageID = :imageID;");
+        $stmt->execute(["imageID" => $imageID]);
+        $image = $stmt->fetch();
+        
+        $stmt = $this->dbh->prepare(
+            "SELECT COUNT(imageID) as imageCount FROM images
+            WHERE fileHash = :fileHash;");
+        $stmt->execute(["fileHash" => $image["fileHash"]]);
+        $imageCount = $stmt->fetch()["imageCount"];
+        if ($imageCount == 0) {
+            $fileDir = dirname(dirname(__FILE__)) . "/images/";
+            unlink($fileDir . $image["fileHash"] . "." . $image["fileType"]);
+        }
+    }
+
+    /**
+     * Make an image the main image for a product,
+     * Deletes and re adds the metadata to the database.
+     */
+    public function setMainImage($imageID) {
+        $stmt = $this->dbh->prepare(
+            "INSERT INTO images (productID, fileHash, fileType)
+            SELECT productID, fileHash, fileType FROM images
+            WHERE imageID = :imageID;
+            DELETE FROM images WHERE imageID = :imageID;");
+        $stmt->execute(["imageID" => $imageID]);
     }
 }
 
 
-// TODO, changed to private so add methods and then use them in admin edit+all
-class Product implements ModelObjectInterface {
-    private $dbh;
+class Product extends ProductModel implements ModelObjectInterface {
     private $id;
     private $name;
     private $description;
@@ -231,9 +269,17 @@ class Product implements ModelObjectInterface {
     }
 
     /**
-     * Delete the product.
+     * Delete the products images, then the actual product.
      */
     public function delete() {
+        $stmt = $this->dbh->prepare(
+            "SELECT imageID FROM images
+            WHERE productID = :productID;");
+        $stmt->execute(["productID" => $this->id]);
+        $images = $stmt->fetchAll();
+        foreach ($images as $image) {
+            $this->deleteImage($image["imageID"]);
+        }
         $stmt = $this->dbh->prepare(
             "DELETE FROM products
             WHERE productID = :productID;");

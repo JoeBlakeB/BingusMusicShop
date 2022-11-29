@@ -16,8 +16,7 @@
         $productPrice = $product->getPriceInt();
         $productStock = $product->getStock();
         $productDescription = $product->getDescription();
-    }
-    else {
+    } else {
         $productName = isset($_POST["name"]) ? $_POST["name"] : "";
         $productPrice = isset($_POST["price"]) ? $_POST["price"] : "";
         $productStock = isset($_POST["stock"]) ? $_POST["stock"] : "";
@@ -49,11 +48,11 @@
 
         <?php
         if ($edit) {
-            ?>
+        ?>
             <p><a href="delete?id=<?= $product->getID(); ?>" class="button">
-                Delete Product
-            </a></p>
-            <?php
+                    Delete Product
+                </a></p>
+        <?php
         }
 
         if (!empty($error)) {
@@ -93,29 +92,38 @@
             <textarea name="description" id="description" placeholder="Product Description"><?= $productDescription; ?></textarea>
         </div>
 
-        <input type="submit" value="<?= $edit ? "Save Changes" : "Add Product"?>">
+        <input type="submit" value="<?= $edit ? "Save Changes" : "Add Product" ?>">
     </form>
     <script src="/static/scripts/productEditValidation.js"></script>
 
     <?php if ($edit) { ?>
-    <div class="basicContent">
-        <h2>Images</h2>
-        <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" name="imageInput" id="imageInput" productID="<?= $product->getID(); ?>">
-        <div id="imageList">
-            <?php
+        <div class="basicContent" id="imageManagement">
+            <h2>Images</h2>
+            <h3>Add a New Image</h3>
+            <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" name="imageInput" id="imageInput" productID="<?= $product->getID(); ?>">
+            <label for="imageInput" class="button">Select an Image</label>
+            <p>Or drag and drop an image here...</p>
+            <p id="statusMessage"></p>
+            <h3 id="currentImagesHeader" <?php
             $images = $product->getImages();
-            foreach ($images as $image) { ?>
-                <div class="uploadedImage" id="image-<?= $image["imageID"]; ?>">
-                    <img src="<?= $image["url"]; ?>" alt="Image #<?= $image["imageID"]; ?>">
-                    <div class="uploadedImageButtons">
-                        <button class="button" onclick="deleteImage(<?= $image["imageID"]; ?>);">Delete</button>
-                        <button class="button" onclick="setPrimaryImage(<?= $image["imageID"]; ?>)">Set as Primary</button>
+            if (count($images) == 0) {
+                echo "style='display: none;'";
+            }
+            ?>>Current Images</h3>
+            <div id="currentImages">
+                <?php
+                foreach ($images as $image) { ?>
+                    <div class="imageContainer" id="image-<?= $image["imageID"]; ?>">
+                        <img src="<?= $image["url"]; ?>" alt="Image #<?= $image["imageID"]; ?>">
+                        <div class="imageContainerButtons">
+                            <button class="button" onclick="setPrimaryImage(<?= $image["imageID"]; ?>)">Set as First</button>
+                            <button class="button" onclick="deleteImage(<?= $image["imageID"]; ?>);">Delete</button>
+                        </div>
                     </div>
-                </div>
-            <?php } ?>
+                <?php } ?>
+            </div>
         </div>
-    </div>
-    <script src="/static/scripts/imageManagement.js"></script>
+        <script src="/static/scripts/imageManagement.js"></script>
     <?php } ?>
 </body>
 
