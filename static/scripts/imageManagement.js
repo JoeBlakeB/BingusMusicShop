@@ -26,11 +26,13 @@ function updateCurrentImagesList() {
 
     let primaryImages = currentImages.getElementsByClassName("primaryImage");
     if (primaryImages.length == 1) {
-        primaryImages[0].innerText = "Set as First";
+        primaryImages[0].innerText = "Set as Primary";
         primaryImages[0].classList.remove("primaryImage");
     }
 
-    let newPrimaryButton = currentImages.firstChild.querySelector("button");
+    let newPrimaryButton = currentImages
+        .getElementsByClassName("imageContainerButtons")[0]
+        .getElementsByTagName("button")[0];
     newPrimaryButton.classList.add("primaryImage");
     newPrimaryButton.innerText = "Primary Image";
 }
@@ -48,7 +50,7 @@ function addImage(imageID, fileName) {
     div.innerHTML = `
         <img src="${fileName}" alt="Image #${imageID}">
         <div class="imageContainerButtons">
-            <button class="button" onclick="setPrimaryImage(${imageID})">Set as First</button>
+            <button class="button" onclick="setPrimaryImage(${imageID})">Set as Primary</button>
             <button class="button" onclick="deleteImage(${imageID});">Delete</button>
         </div>
     `;
@@ -80,8 +82,8 @@ function uploadImage(image) {
     }).then(response => response.json()).then(data => {
         tellUser(data.message, data.success ? "success" : "error");
         addImage(data.imageID, "/images/" + data.fileName);
-    // }).catch(error => {
-    //     tellUser("There was an error uploading the image, please try again.", "error");
+    }).catch(error => {
+        tellUser("There was an error uploading the image, please try again.", "error");
     });
 }
 
@@ -91,11 +93,10 @@ imageInput.addEventListener("change", function () {
     console.log(typeof image);
     uploadImage();
 });
-var imageManagement = document.getElementById("imageManagement");
-imageManagement.addEventListener("dragover", (event) => {
+document.addEventListener("dragover", (event) => {
     event.preventDefault();
 });
-imageManagement.addEventListener("drop", (event) => {
+document.addEventListener("drop", (event) => {
     event.preventDefault();
     let image = event.dataTransfer.files[0];
     uploadImage(image);
@@ -120,8 +121,8 @@ function deleteImage(imageID) {
         else {
             tellUser("Could not remove image.", "error");
         }
-    // }).catch(error => {
-    //     tellUser("Could not remove image.", "error");
+    }).catch(error => {
+        tellUser("Could not remove image.", "error");
     });
 }
 
@@ -150,7 +151,7 @@ function setPrimaryImage(imageID) {
         else {
             tellUser("Could not move image.", "error");
         }
-    // }).catch(error => {
-    //     tellUser("Could not move image.", "error");
+    }).catch(error => {
+        tellUser("Could not move image.", "error");
     });
 }

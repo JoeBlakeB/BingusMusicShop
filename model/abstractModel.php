@@ -14,7 +14,7 @@ abstract class AbstractModel {
      * Connect to the MySQL Server with PDO
      * 
      * Uses the credentials stored in the databaseCredentials.json file
-     * which should be in the include directory.
+     * which should be in the model directory.
      * Example file:
      * {
      *   "database": "",

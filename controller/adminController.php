@@ -42,7 +42,7 @@ class AdminController extends AbstractController {
      * - View a list of all users
      */
     public function usersPage() {
-        $this->maxPathLength(2, $this->uri);
+        $this->maxPathLength(2);
         require "model/accountModel.php";
         $accountModel = new AccountModel();
         if (isset($_GET["accountID"])) {
@@ -92,7 +92,7 @@ class AdminController extends AbstractController {
      * all, new, and edit.
      */
     public function productsPage() {
-        $this->maxPathLength(3, $this->uri);
+        $this->maxPathLength(3);
         if (!isset($this->uri[2])) {
             return $this->productsAll();
         }

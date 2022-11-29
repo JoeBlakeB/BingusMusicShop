@@ -63,12 +63,13 @@ abstract class AbstractController {
     }
 
     /**
-     * Check if the URI is too long and 404 if it is.
+     * Check if the URI is too long or too short and 404 if it is.
      * 
      * @param int $max The maximum number of sub directories
+     * @param int $min The minimum number of sub directories (optional)
      */
-    public function maxPathLength($max) {
-        if (count($this->uri) > $max) {
+    public function maxPathLength($max, $min = 0) {
+        if (count($this->uri) > $max || count($this->uri) < $min) {
             exit($this->pageNotFound());
         }
     }

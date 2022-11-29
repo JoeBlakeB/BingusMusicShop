@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-include "model/abstractModel.php";
+require "model/abstractModel.php";
 
 class AccountModel extends AbstractModel {
     public function __construct() {

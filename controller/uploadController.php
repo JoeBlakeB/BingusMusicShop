@@ -19,9 +19,7 @@ class UploadController extends AbstractController {
             return $this->showError(403, "Forbidden", "You do not have permission to access this page.");
         }
 
-        if (isset($this->uri[1])) {
-            $this->pageNotFound();
-        }
+        $this->maxPathLength(1, 1);
 
         if ($_SERVER["REQUEST_METHOD"] != "POST") {
             $this->showError(405, "Method Not Allowed", "You can only upload images with POST.");
@@ -52,7 +50,7 @@ class UploadController extends AbstractController {
 
         $fileType = explode("/", $image["type"])[1];
 
-        if (!preg_match("/^(png|jpg|jpeg|gif)$/", $fileType)) {
+        if (!preg_match("/^(png|jpg|jpeg|gif|webp)$/", $fileType)) {
             $this->respondWithJson([
                 "success" => false,
                 "message" => "Invalid file type."
