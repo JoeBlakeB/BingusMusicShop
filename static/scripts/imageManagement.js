@@ -16,11 +16,23 @@ function tellUser(message, status = null) {
 }
 
 /**
- * Show or hide the Current Images header on if its empty
+ * Show or hide the Current Images header on if its empty,
+ * then update the buttons to show the correct primary image
  */
-function showHideCurrentImages() {
+function updateCurrentImagesList() {
     document.getElementById("currentImagesHeader").style.display = (
         currentImages.childElementCount == 0 ? "none" : "block");
+    if (currentImages.childElementCount == 0) { return; }
+
+    let primaryImages = currentImages.getElementsByClassName("primaryImage");
+    if (primaryImages.length == 1) {
+        primaryImages[0].innerText = "Set as First";
+        primaryImages[0].classList.remove("primaryImage");
+    }
+
+    let newPrimaryButton = currentImages.firstChild.querySelector("button");
+    newPrimaryButton.classList.add("primaryImage");
+    newPrimaryButton.innerText = "Primary Image";
 }
 
 /**
@@ -34,14 +46,14 @@ function addImage(imageID, fileName) {
     div.id = "image-" + imageID;
     div.classList.add("imageContainer");
     div.innerHTML = `
-        <img src="/images/${fileName}" alt="Image #${imageID}">
+        <img src="${fileName}" alt="Image #${imageID}">
         <div class="imageContainerButtons">
             <button class="button" onclick="setPrimaryImage(${imageID})">Set as First</button>
             <button class="button" onclick="deleteImage(${imageID});">Delete</button>
         </div>
     `;
     currentImages.insertBefore(div, currentImages.firstChild);
-    showHideCurrentImages();
+    updateCurrentImagesList();
 }
 
 /**
@@ -67,9 +79,9 @@ function uploadImage(image) {
         body: formData
     }).then(response => response.json()).then(data => {
         tellUser(data.message, data.success ? "success" : "error");
-        addImage(data.imageID, data.fileName);
-    }).catch(error => {
-        tellUser("There was an error uploading the image, please try again.", "error");
+        addImage(data.imageID, "/images/" + data.fileName);
+    // }).catch(error => {
+    //     tellUser("There was an error uploading the image, please try again.", "error");
     });
 }
 
@@ -103,23 +115,29 @@ function deleteImage(imageID) {
             tellUser("Image deleted successfully.", "success");
             let div = document.getElementById("image-" + imageID);
             div.remove();
-            showHideCurrentImages();
+            updateCurrentImagesList();
         }
         else {
-            tellUser("could remove image.", "error");
+            tellUser("Could not remove image.", "error");
         }
-    }).catch(error => {
-        tellUser("could remove image.", "error");
+    // }).catch(error => {
+    //     tellUser("Could not remove image.", "error");
     });
 }
 
 /**
- * Delete and re add the image to the page and the database so that it is the first image
+ * Delete and re add the image to the page and the database so that it is the primary image
+ * Will do nothing if the image is already primary
  * 
- * @param {int} imageID The ID of the image to be made the first image
+ * @param {int} imageID The ID of the image to be made the primary image
  */
 function setPrimaryImage(imageID) {
-    tellUser("Setting image as first...");
+    let image = document.getElementById("image-" + imageID);
+    let setPrimaryButton = image.querySelector("button");
+    if (setPrimaryButton.classList.contains("primaryImage")) {
+        return;
+    }
+    tellUser("Setting image as primary...");
     fetch("image?imageID=" + imageID + "&action=setPrimary", {
         method: "GET",
     }).then(response => response.json()).then(data => {
@@ -127,12 +145,12 @@ function setPrimaryImage(imageID) {
             tellUser("Image moved successfully.", "success");
             let div = document.getElementById("image-" + imageID);
             div.remove();
-            currentImages.insertBefore(div, currentImages.firstChild);
+            addImage(data.imageID, div.querySelector("img").src);
         }
         else {
-            tellUser("could not move image.", "error");
+            tellUser("Could not move image.", "error");
         }
-    }).catch(error => {
-        tellUser("could remove image.", "error");
+    // }).catch(error => {
+    //     tellUser("Could not move image.", "error");
     });
 }

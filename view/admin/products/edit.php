@@ -112,15 +112,20 @@
             ?>>Current Images</h3>
             <div id="currentImages">
                 <?php
+                $primary = true;
                 foreach ($images as $image) { ?>
                     <div class="imageContainer" id="image-<?= $image["imageID"]; ?>">
                         <img src="<?= $image["url"]; ?>" alt="Image #<?= $image["imageID"]; ?>">
                         <div class="imageContainerButtons">
-                            <button class="button" onclick="setPrimaryImage(<?= $image["imageID"]; ?>)">Set as First</button>
+                            <button class="button <?= $primary ? "primaryImage" : ""; ?>" 
+                                onclick="setPrimaryImage(<?= $image["imageID"]; ?>)">
+                                <?= $primary ? "Primary Image" : "Set as Primary"; ?></button>
                             <button class="button" onclick="deleteImage(<?= $image["imageID"]; ?>);">Delete</button>
                         </div>
                     </div>
-                <?php } ?>
+                    <?php 
+                    $primary = false; 
+                } ?>
             </div>
         </div>
         <script src="/static/scripts/imageManagement.js"></script>

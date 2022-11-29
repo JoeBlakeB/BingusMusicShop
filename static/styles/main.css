@@ -384,3 +384,8 @@ input[type=file] {
     margin: 4px 0 2px 0;
     border-radius: 10px;
 }
+
+#currentImages .imageContainer button.primaryImage {
+    background-color: transparent;
+    color: black;
+}

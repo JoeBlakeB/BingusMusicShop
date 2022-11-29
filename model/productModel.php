@@ -117,6 +117,8 @@ class ProductModel extends AbstractModel {
     /**
      * Make an image the main image for a product,
      * Deletes and re adds the metadata to the database.
+     * 
+     * @param int $imageID The new id of the image.
      */
     public function setMainImage($imageID) {
         $stmt = $this->dbh->prepare(
@@ -125,6 +127,7 @@ class ProductModel extends AbstractModel {
             WHERE imageID = :imageID;
             DELETE FROM images WHERE imageID = :imageID;");
         $stmt->execute(["imageID" => $imageID]);
+        return $this->dbh->lastInsertId();
     }
 }
 

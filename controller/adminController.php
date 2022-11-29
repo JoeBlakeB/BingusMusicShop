@@ -230,11 +230,14 @@ class AdminController extends AbstractController {
             $productModel = new ProductModel();
             if ($_GET["action"] == "delete") {
                 $productModel->deleteImage($_GET["imageID"]);
+                $this->respondWithJson(["success" => true]);
             }
             else {
-                $productModel->setMainImage($_GET["imageID"]);
+                $imageID = $productModel->setMainImage($_GET["imageID"]);
+                $this->respondWithJson(
+                    ["success" => true,
+                    "imageID" => $imageID]);
             }
-            $this->respondWithJson(["success" => true]);
         }
         catch (PDOException $e) {
             $this->respondWithJson([
