@@ -225,7 +225,7 @@ header a {
 
 /* Content Layout */
 
-.basicContent,
+.content,
 .productEditForm {
     margin: 0 auto;
     max-width: 1200px;
@@ -233,7 +233,7 @@ header a {
     overflow-x: auto;
 }
 
-.basicContent a {
+.content a {
     width: min-content;
 }
 
@@ -388,4 +388,114 @@ input[type=file] {
 #currentImages .imageContainer button.primaryImage {
     background-color: transparent;
     color: black;
+}
+
+/* Product View */
+
+.viewProduct {
+    max-width: 2000px;
+    margin-top: 8px;
+}
+
+.imageViewContainer {
+    border: 2px solid var(--theme-main);
+    border-radius: 8px;
+    overflow: hidden;
+    width: calc(65% - 150px);
+    float: left;
+}
+
+@media screen and (max-width: 800px) {
+    .imageViewContainer {
+        width: calc(100% - 4px);
+    }
+}
+
+.imageViewContainer #imageView {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    margin: 4px 0
+}
+
+.imageViewContainer #selectedImage {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: auto;
+}
+
+.imageViewContainer .imageList {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-top: 8px;
+    
+    padding: 4px 0 0px 4px;
+    background: var(--theme-main);
+}
+
+.imageViewContainer .imageListItem {
+    padding: 4px;
+}
+
+.imageViewContainer .imageList img {
+    width: 100px;
+    height: 100px;
+    border-radius: 4px;
+    border: 2px solid var(--theme-main);
+    transition: opacity 0.4s ease-in-out, filter 1s ease-in;
+}
+
+.imageViewContainer .imageListItem img:not(.selected) {
+    opacity: .75;
+    filter: grayscale(80%);
+}
+
+.imageViewContainer .imageListItem:hover img:not(.selected) {
+    opacity: unset;
+    filter: contrast(120%);
+}
+
+.viewProduct h1 {
+    margin: 4px 0 12px;
+}
+
+.viewProduct h3 {
+    margin: 0 0 12px 0;
+}
+
+@media screen and (min-width: 801px) {
+    .viewProduct:not(.noImages) h1,
+    .viewProduct:not(.noImages) h3 {
+        float: right;
+        width: calc(35% + 118px);
+        padding: 0 12px 0 0;
+    }
+
+    .viewProduct:not(.noImages) p {
+        padding: 10px
+    }
+
+    .viewProduct:not(.noImages) .imageViewContainer {
+        margin-right: 16px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .viewProduct h3,
+    .viewProduct p {
+        float: left;
+    }
+
+    .viewProduct h3 {
+        margin: 12px 0 8px;
+    }
+
+    .viewProduct.noImages h3 {
+        margin-top: 0;
+    }
+
+    .viewProduct p {
+        margin: 0 0 12px;
+    }
 }

@@ -90,8 +90,7 @@ function uploadImage(image) {
 var imageInput = document.getElementById("imageInput");
 imageInput.addEventListener("change", function () {
     let image = imageInput.files[0];
-    console.log(typeof image);
-    uploadImage();
+    uploadImage(image);
 });
 document.addEventListener("dragover", (event) => {
     event.preventDefault();

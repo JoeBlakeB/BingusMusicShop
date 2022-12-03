@@ -33,7 +33,7 @@
 <body>
     <?php require "header.php"; ?>
 
-    <div class="basicContent">
+    <div class="content">
         <h1>Admin - <?= $edit ?
             "Edit a Product" :
             "Add a new Product"; ?>
@@ -49,9 +49,12 @@
         <?php
         if ($edit) {
         ?>
+            <p><a href="<?= $this->basePath ?>/product/<?= $product->getId() ?>" class="button">
+                View Product
+            </a></p>
             <p><a href="delete?id=<?= $product->getID(); ?>" class="button">
-                    Delete Product
-                </a></p>
+                Delete Product
+            </a></p>
         <?php
         }
 
@@ -97,7 +100,7 @@
     <script src="/static/scripts/productEditValidation.js"></script>
 
     <?php if ($edit) { ?>
-        <div class="basicContent" id="imageManagement">
+        <div class="content" id="imageManagement">
             <h2>Images</h2>
             <h3>Add a New Image</h3>
             <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" name="imageInput" id="imageInput" productID="<?= $product->getID(); ?>">

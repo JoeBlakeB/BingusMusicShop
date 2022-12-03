@@ -11,7 +11,7 @@
 <body>
     <?php require "header.php"; ?>
 
-    <div class="basicContent">
+    <div class="content">
         <h1>Admin - Overview</h1>
 
         <h2>Products</h2>

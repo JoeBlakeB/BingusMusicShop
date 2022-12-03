@@ -11,7 +11,7 @@
 <body>
     <?php require "header.php"; ?>
 
-    <div class="basicContent">
+    <div class="content">
         <h1>Admin - All Products</h1>
 
         <p><a href="<?= $this->basePath ?>/admin/" class="button">

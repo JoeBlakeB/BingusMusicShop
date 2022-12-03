@@ -38,8 +38,7 @@ priceInput.addEventListener("input", verifyPrice);
 // Only allow numbers to be entered
 priceInput.addEventListener("keypress", function (event) {
     if ((isNaN(event.key) && event.key !== ".") || 
-        (event.key === "." && priceInput.value.includes(".")) ||
-        (priceInput.value.split(".")[1] && priceInput.value.split(".")[1].length >= 2)) {
+        (event.key === "." && priceInput.value.includes("."))) {
         return event.preventDefault();
     }
 });

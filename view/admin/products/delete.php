@@ -11,7 +11,7 @@
 <body>
     <?php require "header.php"; ?>
 
-    <div class="basicContent">
+    <div class="content">
         <h1>Admin - Delete Product</h1>
 
         <p><a href=".." class="button">

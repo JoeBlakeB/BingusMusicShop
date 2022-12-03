@@ -10,7 +10,7 @@
 
 <body>
     <?php require "header.php"; ?>
-    <div class="basicContent">
+    <div class="content">
         <h1>Account Details</h1>
         You are signed in as <?php echo $_SESSION["account"]["fullName"]; ?>.
         <p><a class="button" href="<?= $this->basePath ?>/account/signout">Sign out</a></p>
