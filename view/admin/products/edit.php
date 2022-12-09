@@ -71,7 +71,7 @@
     </div>
 
     <form action="<?= $edit ? "edit?id=" . $product->getID() : "new"; ?>" method="post" class="editForm">
-        <div class="grid threeColumns">
+        <div class="grid threeColumns uneven">
             <div class="inputContainer <?= $valid["name"] ? "" : "inputError"; ?>" id="nameContainer">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" value="<?= $productName; ?>" placeholder="Product Name" required>

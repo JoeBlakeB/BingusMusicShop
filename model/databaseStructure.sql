@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS unverifiedAccounts (
 CREATE TABLE IF NOT EXISTS addresses (
     addressID       INT UNSIGNED NOT NULL AUTO_INCREMENT,
     accountID       INT UNSIGNED NOT NULL,
-    fullName        VARCHAR(256)  NOT NULL,
+    fullName        VARCHAR(256) NOT NULL,
     addressLine1    VARCHAR(128) NOT NULL,
     addressLine2    VARCHAR(128),
     city            VARCHAR(64)  NOT NULL,
     county          VARCHAR(64)  NOT NULL,
     postcode        VARCHAR(8)   NOT NULL,
-    country         VARCHAR(2)  NOT NULL,
+    country         VARCHAR(2)   NOT NULL,
     PRIMARY KEY (addressID),
     FOREIGN KEY (accountID)
         REFERENCES accounts (accountID)
@@ -40,7 +40,17 @@ CREATE TABLE IF NOT EXISTS addresses (
 );
 
 CREATE TABLE IF NOT EXISTS cards (
-
+    cardID          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    accountID       INT UNSIGNED NOT NULL,
+    fullName        VARCHAR(256) NOT NULL,
+    cardNumber      VARCHAR(16)  NOT NULL,
+    securityCode    VARCHAR(3)   NOT NULL,
+    expiryMonth     INT UNSIGNED NOT NULL,
+    expiryYear      INT UNSIGNED NOT NULL,
+    PRIMARY KEY (cardID),
+    FOREIGN KEY (accountID)
+        REFERENCES accounts (accountID)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS orders (

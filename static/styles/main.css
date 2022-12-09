@@ -348,8 +348,12 @@ input[type=submit] {
 
 .grid.threeColumns {
     display: grid;
-    grid-template-columns: 5fr 2fr 2fr;
     grid-gap: 0 8px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.grid.threeColumns.uneven {
+    grid-template-columns: 5fr 2fr 2fr;
 }
 
 @media screen and (max-width: 800px) {
@@ -549,12 +553,23 @@ input[type=file] {
     }
 }
 
-/* Address List */
+/* Address List & Payment Methods List */
 
-.addressesListItem {
+.addressesListItem,
+.paymentMethodsListItem {
     border: 2px dashed #bbb;
     border-radius: 4px;
     padding: 8px;
     max-width: 400px;
     margin: 12px 0;
+}
+
+.paymentMethodsListItem.expired {
+    border-color: red;
+    background-color: #ffd0d0;
+}
+
+.warning {
+    color: red;
+    font-weight: bold;
 }

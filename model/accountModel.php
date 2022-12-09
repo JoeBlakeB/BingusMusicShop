@@ -296,6 +296,56 @@ class Account extends AccountModel implements ModelObjectInterface {
         }
         return new Address($this->dbh, $data);
     }
+
+    /**
+     * Add a new card to the account
+     * 
+     * @param array $data The data to add.
+     */
+    public function addCard($data) {
+        $stmt = $this->dbh->prepare(
+            "INSERT INTO cards (accountID, fullName, cardNumber, securityCode, expiryMonth, expiryYear)
+            VALUES (:accountID, :name, :cardNumber, :securityCode, :expiryMonth, :expiryYear)");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->bindParam(":name", $data["name"]);
+        $stmt->bindParam(":cardNumber", $data["cardNumber"]);
+        $stmt->bindParam(":securityCode", $data["securityCode"]);
+        $stmt->bindParam(":expiryMonth", $data["expiryMonth"]);
+        $stmt->bindParam(":expiryYear", $data["expiryYear"]);
+        $stmt->execute();
+    }
+
+    /**
+     * Get an array of cards for the account.
+     * 
+     * @return array The cards
+     */
+    public function getCards() {
+        $stmt = $this->dbh->prepare(
+            "SELECT * FROM cards
+            WHERE accountID = :accountID");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->execute();
+        return $this->createObjectArray($stmt->fetchAll(), Card::class);
+    }
+
+    /**
+     * Get a specific card for the account.
+     */
+    public function getCard($cardID) {
+        $stmt = $this->dbh->prepare(
+            "SELECT * FROM cards
+            WHERE accountID = :accountID
+            AND cardID = :cardID");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->bindParam(":cardID", $cardID);
+        $stmt->execute();
+        $data = $stmt->fetch();
+        if ($data === false) {
+            return null;
+        }
+        return new Card($this->dbh, $data);
+    }
 }
 
 class Address extends AccountModel implements ModelObjectInterface {
@@ -408,6 +458,122 @@ class Address extends AccountModel implements ModelObjectInterface {
             "DELETE FROM addresses
             WHERE addressID = :addressID");
         $stmt->bindParam(":addressID", $this->id);
+        $stmt->execute();
+    }
+}
+
+class Card extends AccountModel implements ModelObjectInterface {
+    protected $dbh;
+    private $accountID;
+    private $id;
+    private $fullName;
+    private $cardNumber;
+    private $securityCode;
+    private $expiryMonth;
+    private $expiryYear;
+
+    public function __construct(&$dbh, $data) {
+        parent::__construct($dbh);
+        $this->dbh = $dbh;
+        $this->id = $data["cardID"];
+        $this->accountID = $data["accountID"];
+        $this->fullName = $data["fullName"];
+        $this->cardNumber = $data["cardNumber"];
+        $this->securityCode = $data["securityCode"];
+        $this->expiryMonth = $data["expiryMonth"];
+        $this->expiryYear = $data["expiryYear"];
+    }
+
+    public function __toString() {
+        return $this->getFullName() . "<br>" . 
+            $this->getCardNumberHidden() . "<br>" .
+            ($this->isExpired() ? "Expired: " : "Expiry: ") .
+            $this->getExpiry();
+    }
+
+    public function getID() {
+        return $this->id;
+    }
+
+    public function getFullName() {
+        return htmlspecialchars($this->fullName);
+    }
+
+    /**
+     * Get the last four digits of the card number
+     * with • for the first 12 digits.
+     */
+    public function getCardNumberHidden() {
+        return "•••• •••• •••• " . substr($this->cardNumber, -4);
+    }
+
+    /**
+     * Get the expiry date in the format MM/YY
+     */
+    public function getExpiry() {
+        return str_pad($this->expiryMonth, 2, "0", STR_PAD_LEFT) . "/" . 
+            substr($this->expiryYear, -2);
+    }
+
+    /**
+     * Check if the card is expired.
+     *
+     * @return bool True if the card is expired
+     */
+    public function isExpired() {
+        $expiry = new DateTime($this->expiryYear . "-" . $this->expiryMonth . "-01");
+        $now = new DateTime();
+        return $expiry < $now;
+    }
+
+    public function getCardNumber() {
+        return $this->cardNumber;
+    }
+
+    public function getSecurityCode() {
+        return $this->securityCode;
+    }
+
+    public function getExpiryMonth() {
+        return $this->expiryMonth;
+    }
+
+    public function getExpiryYear() {
+        return $this->expiryYear;
+    }
+
+    /** 
+     * Update the card.
+     * 
+     * @param array $data The data to update
+     */
+    public function update($data) {
+        $stmt = $this->dbh->prepare(
+            "UPDATE cards
+            SET fullName = :name,
+                cardNumber = :cardNumber,
+                securityCode = :securityCode,
+                expiryMonth = :expiryMonth,
+                expiryYear = :expiryYear
+            WHERE cardID = :cardID");
+        $stmt->bindParam(":cardID", $this->id);
+        $stmt->bindParam(":name", $data["name"]);
+        $stmt->bindParam(":cardNumber", $data["cardNumber"]);
+        $stmt->bindParam(":securityCode", $data["securityCode"]);
+        $stmt->bindParam(":expiryMonth", $data["expiryMonth"]);
+        $stmt->bindParam(":expiryYear", $data["expiryYear"]);
+        $stmt->execute();
+    }
+
+    /**
+     * Delete the card.
+     */
+    public function delete() {
+        $stmt = $this->dbh->prepare(
+            "DELETE FROM cards
+            WHERE cardID = :cardID"
+        );
+        $stmt->bindParam(":cardID", $this->id);
         $stmt->execute();
     }
 }

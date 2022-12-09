@@ -91,7 +91,60 @@ class AccountController extends AbstractController {
         require "view/account/manage/addresses.php";
     }
 
-    
+    /**
+     * Manage the users payment methods
+     */
+    public function paymentsPage() {
+        if (!isset($_SESSION["account"])) {
+            return header("Location: signin");
+        }
+        $accountModel = new AccountModel();
+        $account = $accountModel->getAccountByID($_SESSION["account"]["id"]);
+
+        if (isset($_GET["new"])) {
+            $valid = $this->validateCard($_POST);
+            if (!$valid[0]) {
+                return require "view/account/manage/editPaymentCard.php";
+            }
+            try {
+                $account->addCard($_POST);
+            } catch (PDOException $e) {
+                $this->showError(500, "Internal Server Error", "An error occurred while adding the address. Please try again later.");
+            }
+            return header("Location: payments");
+        }
+        else if (isset($_GET["edit"])) {
+            $card = $account->getCard($_GET["edit"]);
+            $valid = $this->validateCard($_POST);
+            if (!$card) {
+                return $this->showError(404, "Payment Method Not Found", "The payment method you are trying to edit does not exist.", "payments", "Back to All Payment Methods");
+            }
+            if ($valid[0]) {
+                try {
+                    $card->update($_POST);
+                    return header("Location: payments");
+                } catch (PDOException $e) {
+                    $this->showError(500, "Internal Server Error", "An error occurred while editing the payment method. Please try again later.");
+                }
+            }
+            return require "view/account/manage/editPaymentCard.php";
+        }
+        else if (isset($_GET["delete"])) {
+            $card = $account->getCard($_GET["delete"]);
+            if (!$card) {
+                return $this->showError(404, "Payment Method Not Found", "The payment method you are trying to delete does not exist.", "payments", "Back to All Payment Methods");
+            }
+            try {
+                $card->delete();
+            } catch (PDOException $e) {
+                $this->showError(500, "Internal Server Error", "An error occurred while deleting the payment method. Please try again later.");
+            }
+            return header("Location: payments");
+        }
+
+        $cards = $account->getCards();
+        require "view/account/manage/payments.php";
+    }
 
     /**
      * Sign in to an existing account, will then redirect to account
@@ -439,6 +492,46 @@ class AccountController extends AbstractController {
             $valid["county"] &&
             $valid["country"] &&
             $valid["postcode"]);
+        return $valid;
+    }
+
+    /**
+     * Validate a users card.
+     * 
+     * @param array $data The data to validate.
+     * @return array of bools for each field.
+     */
+    public function validateCard($data) {
+        if (empty($data)) {
+            return [
+                0 => false,
+                "name" => true,
+                "cardNumber" => true,
+                "expiryMonth" => true,
+                "expiryYear" => true,
+                "securityCode" => true
+            ];
+        }
+        $valid = [];
+        $valid["name"] = (isset($data["name"]) &&
+            strlen($data["name"]) <= 256 &&
+            strlen($data["name"]) > 0);
+        $valid["cardNumber"] = (isset($data["cardNumber"]) &&
+            preg_match("/^[0-9]{16}$/", $data["cardNumber"]));
+        $valid["expiryMonth"] = (isset($data["expiryMonth"]) &&
+            $data["expiryMonth"] >= 1 &&
+            $data["expiryMonth"] <= 12);
+        $valid["expiryYear"] = (isset($data["expiryYear"]) &&
+            $data["expiryYear"] >= date("Y") &&
+            $data["expiryYear"] <= date("Y") + 15);
+        $valid["securityCode"] = (isset($data["securityCode"]) &&
+            preg_match("/^[0-9]{3}$/", $data["securityCode"]));
+        $valid[0] = (
+            $valid["name"] &&
+            $valid["cardNumber"] &&
+            $valid["expiryMonth"] &&
+            $valid["expiryYear"] &&
+            $valid["securityCode"]);
         return $valid;
     }
 }
