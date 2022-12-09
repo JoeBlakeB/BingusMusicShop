@@ -12,7 +12,30 @@ require "model/abstractModel.php";
 class AccountModel extends AbstractModel {
     public function __construct() {
         parent::__construct();
+        require "model/countriesList.php";
+        $this->countriesList = $countriesList;
+    }
+
+    /**
+     * Gets an account by a column and value.
+     * 
+     * @param string $where The column to search by.
+     * @param string $value The value to search for.
+     */
+    private function getAccountBase($where, $value) {
         $this->deleteExpiredAccounts();
+        $stmt = $this->dbh->prepare(
+            "SELECT * FROM accounts
+            LEFT JOIN unverifiedAccounts
+            USING (accountID)
+            WHERE " . $where . " = :value");
+        $stmt->bindParam(":value", $value);
+        $stmt->execute();
+        $account = $stmt->fetch();
+        if ($account) {
+            return new Account($this->dbh, $account);
+        }
+        return null;
     }
 
     /**
@@ -23,18 +46,7 @@ class AccountModel extends AbstractModel {
      */
     public function getAccountByEmail($email) {
         $email = strtolower($email);
-        $stmt = $this->dbh->prepare(
-            "SELECT * FROM accounts
-            LEFT JOIN unverifiedAccounts
-            USING (accountID)
-            WHERE email = :email");
-        $stmt->bindParam(":email", $email);
-        $stmt->execute();
-        $account = $stmt->fetch();
-        if ($account) {
-            return new Account($this->dbh, $account);
-        }
-        return null;
+        return $this->getAccountBase("email", $email);
     }
 
     /**
@@ -44,18 +56,7 @@ class AccountModel extends AbstractModel {
      * @return Account The account
      */
     public function getAccountByID($accountID) {
-        $stmt = $this->dbh->prepare(
-            "SELECT * FROM accounts
-            LEFT JOIN unverifiedAccounts
-            USING (accountID)
-            WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $accountID);
-        $stmt->execute();
-        $account = $stmt->fetch();
-        if ($account) {
-            return new Account($this->dbh, $account);
-        }
-        return null;
+        return $this->getAccountBase("accountID", $accountID);
     }
 
     /**
@@ -111,8 +112,8 @@ class AccountModel extends AbstractModel {
     }
 }
 
-class Account implements ModelObjectInterface {
-    private $dbh;
+class Account extends AccountModel implements ModelObjectInterface {
+    protected $dbh;
     private $id;
     private $email;
     private $passwordHash;
@@ -242,5 +243,171 @@ class Account implements ModelObjectInterface {
      */
     public function verifyPassword($password) {
         return password_verify($password, $this->passwordHash);
+    }
+
+    /**
+     * Add a new address to the account.
+     * 
+     * @param array $data The data to add
+     */
+    public function addAddress($data) {
+        $stmt = $this->dbh->prepare(
+            "INSERT INTO addresses (accountID, fullName, addressLine1, addressLine2, city, county, postcode, country)
+            VALUES (:accountID, :name, :address1, :address2, :city, :county, :postcode, :country)");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->bindParam(":name", $data["name"]);
+        $stmt->bindParam(":address1", $data["address1"]);
+        $stmt->bindParam(":address2", $data["address2"]);
+        $stmt->bindParam(":city", $data["city"]);
+        $stmt->bindParam(":county", $data["county"]);
+        $stmt->bindParam(":postcode", $data["postcode"]);
+        $stmt->bindParam(":country", $data["country"]);
+        $stmt->execute();
+    }
+
+    /**
+     * Get an array of addresses for the account.
+     * 
+     * @return array The addresses
+     */
+    public function getAddresses() {
+        $stmt = $this->dbh->prepare(
+            "SELECT * FROM addresses
+            WHERE accountID = :accountID");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->execute();
+        return $this->createObjectArray($stmt->fetchAll(), Address::class);
+    }
+
+    /**
+     * Get a specific address for the account.
+     */
+    public function getAddress($addressID) {
+        $stmt = $this->dbh->prepare(
+            "SELECT * FROM addresses
+            WHERE accountID = :accountID
+            AND addressID = :addressID");
+        $stmt->bindParam(":accountID", $this->id);
+        $stmt->bindParam(":addressID", $addressID);
+        $stmt->execute();
+        $data = $stmt->fetch();
+        if ($data === false) {
+            return null;
+        }
+        return new Address($this->dbh, $data);
+    }
+}
+
+class Address extends AccountModel implements ModelObjectInterface {
+    protected $dbh;
+    private $accountID;
+    private $id;
+    private $fullName;
+    private $addressLine1;
+    private $addressLine2;
+    private $city;
+    private $county;
+    private $postcode;
+    private $country;
+
+    public function __construct(&$dbh, $data) {
+        parent::__construct($dbh);
+        $this->dbh = $dbh;
+        $this->id = $data["addressID"];
+        $this->accountID = $data["accountID"];
+        $this->fullName = $data["fullName"];
+        $this->addressLine1 = $data["addressLine1"];
+        $this->addressLine2 = $data["addressLine2"];
+        $this->city = $data["city"];
+        $this->county = $data["county"];
+        $this->postcode = $data["postcode"];
+        $this->country = $data["country"];
+    }
+    
+    /**
+     * @return string The full address
+     */
+    public function __toString() {
+        $address = [
+            htmlspecialchars($this->fullName),
+            htmlspecialchars($this->addressLine1),
+            htmlspecialchars($this->addressLine2),
+            htmlspecialchars($this->city),
+            htmlspecialchars($this->county),
+            htmlspecialchars($this->postcode),
+            $this->countriesList[$this->country]
+        ];
+        return implode(",<br>", array_filter($address));
+    }
+
+    public function getID() {
+        return $this->id;
+    }
+
+    public function getFullName() {
+        return htmlspecialchars($this->fullName);
+    }
+
+    public function getAddress1() {
+        return htmlspecialchars($this->addressLine1);
+    }
+
+    public function getAddress2() {
+        return htmlspecialchars($this->addressLine2);
+    }
+
+    public function getCity() {
+        return htmlspecialchars($this->city);
+    }
+
+    public function getCounty() {
+        return htmlspecialchars($this->county);
+    }
+
+    public function getPostcode() {
+        return htmlspecialchars($this->postcode);
+    }
+
+    public function getCountryCode() {
+        return $this->country;
+    }
+
+    /** 
+     * Update the address.
+     * 
+     * @param array $data The data to update
+     */
+    public function update($data) {
+        var_dump($data);
+        $stmt = $this->dbh->prepare(
+            "UPDATE addresses
+            SET fullName = :name,
+                addressLine1 = :address1,
+                addressLine2 = :address2,
+                city = :city,
+                county = :county,
+                postcode = :postcode,
+                country = :country
+            WHERE addressID = :addressID");
+        $stmt->bindParam(":addressID", $this->id);
+        $stmt->bindParam(":name", $data["name"]);
+        $stmt->bindParam(":address1", $data["address1"]);
+        $stmt->bindParam(":address2", $data["address2"]);
+        $stmt->bindParam(":city", $data["city"]);
+        $stmt->bindParam(":county", $data["county"]);
+        $stmt->bindParam(":postcode", $data["postcode"]);
+        $stmt->bindParam(":country", $data["country"]);
+        $stmt->execute();
+    }
+
+    /**
+     * Delete the address.
+     */
+    public function delete() {
+        $stmt = $this->dbh->prepare(
+            "DELETE FROM addresses
+            WHERE addressID = :addressID");
+        $stmt->bindParam(":addressID", $this->id);
+        $stmt->execute();
     }
 }

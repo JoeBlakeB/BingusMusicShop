@@ -1,5 +1,8 @@
 # Bingus Music Shop
 
+![](https://img.shields.io/badge/Lines_of_PHP-0-blue)
+![](https://img.shields.io/badge/Total_Lines_of_Code-0-blue)
+
 A modern web application using PHP and MySQL for A musical instrument retailer. Made for the Level 5 Web Programming Unit at Bournemouth University.
 
 The lab and tutorial tasks are available [here](https://github.com/JoeBlakeB/WebProgramming2022).
@@ -29,5 +32,6 @@ The credentials for accessing a MySQL database should be stored in a file called
   - FredokaOne Font, by Milena Brandao, available at [Google Fonts](https://fonts.google.com/specimen/Fredoka+One), [License](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/static/fonts/FredokaOne.txt).
   - Open Sans Font, by Steve Matteson, available at [Google Fonts](https://fonts.google.com/specimen/Open+Sans), [License](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/static/fonts/OpenSans.txt).
   - Ubuntu Font, by Dalton Maag, available at [Google Fonts](https://fonts.google.com/specimen/Ubuntu), [License](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/static/fonts/UbuntuBold.txt).
+  - Countries Array, by html-code-generator.com, available at [html-code-generator.com](https://www.html-code-generator.com/php/array/country-names)
 
 Copyright (c) 2022 JoeBlakeB (Joe Baker), All Rights Reserved.

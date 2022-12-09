@@ -226,7 +226,7 @@ header a {
 /* Content Layout */
 
 .content,
-.productEditForm {
+.editForm {
     margin: 0 auto;
     max-width: 1200px;
     padding: 0 8px;
@@ -275,13 +275,18 @@ input[type=submit] {
     font-size: large;
 }
 
+.button.disabled {
+    background-color: darkgrey;
+    color: lightgrey;
+}
+
 /* Form */
 
-.productEditForm input {
+.editForm input {
     font-size: 16px;
 }
 
-.productEditForm textarea {
+.editForm textarea {
     box-sizing: border-box;
     width: 100%;
     min-width: 100%;
@@ -290,11 +295,55 @@ input[type=submit] {
     max-height: 32em;
 }
 
-.productEditForm input:not(#price):not([type=submit]),
-.productEditForm textarea {
+.editForm input:not(#price):not([type=submit]),
+.editForm textarea {
     border: 1px solid #8f8f9d;
     padding: 4px;
     margin: 4px 0;
+}
+
+.basicResponsiveForm .inputContainer {
+    height: 40px;
+}
+
+.basicResponsiveForm .inputContainer label  {
+    display: inline-block;
+    margin: 8px 0;
+}
+
+.basicResponsiveForm .inputContainer input,
+.basicResponsiveForm .inputContainer select {
+    box-sizing: border-box;
+    width: calc(100% - 125px);
+    float: right;
+}
+
+.basicResponsiveForm select {
+    height: 32px;
+    margin: 4px 0;
+    border: 1px solid #8f8f9d;
+    background: white;
+    font-size: 16px;
+}
+
+@media screen and (max-width: 550px) {
+    .basicResponsiveForm .inputContainer {
+        height: unset;
+    }
+
+    .basicResponsiveForm .inputContainer label {
+        width: 100%;
+    }
+
+    .basicResponsiveForm .inputContainer input {
+        width: 100%;
+        float: none;
+    }
+}
+
+.basicResponsiveForm input[type=submit] {
+    width: 100%;
+    margin: 8px 0;
 }
 
 .grid.threeColumns {
@@ -328,7 +377,8 @@ input[type=submit] {
 
 .inputError input,
 .inputError textarea,
-.inputError .priceInput {
+.inputError .priceInput,
+.inputError select {
     background-color: #ffd0d0;
 }
 
@@ -400,7 +450,6 @@ input[type=file] {
 .imageViewContainer {
     border: 2px solid var(--theme-main);
     border-radius: 8px;
-    overflow: hidden;
     width: calc(65% - 150px);
     float: left;
 }
@@ -498,4 +547,14 @@ input[type=file] {
     .viewProduct p {
         margin: 0 0 12px;
     }
+}
+
+/* Address List */
+
+.addressesListItem {
+    border: 2px dashed #bbb;
+    border-radius: 4px;
+    padding: 8px;
+    max-width: 400px;
+    margin: 12px 0;
 }

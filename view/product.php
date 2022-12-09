@@ -3,6 +3,7 @@
 
 <head>
     <?php
+    $title = $product->getName();
     $images = $product->getImages();
     require "head.php";
     ?>

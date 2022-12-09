@@ -4,11 +4,11 @@
 
 CREATE TABLE IF NOT EXISTS accounts (
     accountID           INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    email               VARCHAR(255) NOT NULL,
+    email               VARCHAR(256) NOT NULL,
     passwordHash        VARCHAR(60)  NOT NULL,
     twoFactorEnabled    BOOLEAN      NOT NULL DEFAULT FALSE,
     isAdmin             BOOLEAN      NOT NULL DEFAULT FALSE,
-    fullName            VARCHAR(255),
+    fullName            VARCHAR(256),
     PRIMARY KEY (accountID),
     UNIQUE (email)
 );
@@ -21,6 +21,34 @@ CREATE TABLE IF NOT EXISTS unverifiedAccounts (
     FOREIGN KEY (accountID)
         REFERENCES accounts (accountID)
         ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS addresses (
+    addressID       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    accountID       INT UNSIGNED NOT NULL,
+    fullName        VARCHAR(256)  NOT NULL,
+    addressLine1    VARCHAR(128) NOT NULL,
+    addressLine2    VARCHAR(128),
+    city            VARCHAR(64)  NOT NULL,
+    county          VARCHAR(64)  NOT NULL,
+    postcode        VARCHAR(8)   NOT NULL,
+    country         VARCHAR(2)  NOT NULL,
+    PRIMARY KEY (addressID),
+    FOREIGN KEY (accountID)
+        REFERENCES accounts (accountID)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS cards (
+
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+
+);
+
+CREATE TABLE IF NOT EXISTS orderItems (
+    
 );
 
 CREATE TABLE IF NOT EXISTS products (

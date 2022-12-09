@@ -32,8 +32,10 @@ abstract class AbstractController {
      * @param int $code The error code
      * @param string $title The error title
      * @param string $message The error message
+     * @param string $linkHref The link href - optional
+     * @param string $linkText The link text - optional
      */
-    public function showError($errorCode, $errorTitle, $errorMessage) {
+    public function showError($errorCode, $errorTitle, $errorMessage, $errorLinkHref = null, $errorLinkText = null) {
         http_response_code($errorCode);
         exit(require "view/error.php");
     }

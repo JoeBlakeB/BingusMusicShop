@@ -70,32 +70,32 @@
         <h2><?= $edit ? $product->getName() : ""; ?></h2>
     </div>
 
-    <form action="<?= $edit ? "edit?id=" . $product->getID() : "new"; ?>" method="post" class="productEditForm">
+    <form action="<?= $edit ? "edit?id=" . $product->getID() : "new"; ?>" method="post" class="editForm">
         <div class="grid threeColumns">
-            <div class="inputContainer <?= $valid["name"] ? "" : "inputError" ?>" id="nameContainer">
+            <div class="inputContainer <?= $valid["name"] ? "" : "inputError"; ?>" id="nameContainer">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" value="<?= $productName; ?>" placeholder="Product Name" required>
             </div>
 
-            <div class="inputContainer <?= $valid["price"] ? "" : "inputError" ?>" id="priceContainer">
+            <div class="inputContainer <?= $valid["price"] ? "" : "inputError"; ?>" id="priceContainer">
                 <label for="price">Price</label><br>
                 <span class="priceInput">£
                     <input type="number" name="price" id="price" value="<?= $productPrice; ?>" step="0.01" min="0.01" max="9999999" placeholder="0.00" required>
                 </span>
             </div>
 
-            <div class="inputContainer <?= $valid["stock"] ? "" : "inputError" ?>" id="stockContainer">
+            <div class="inputContainer <?= $valid["stock"] ? "" : "inputError"; ?>" id="stockContainer">
                 <label for="stock">Stock</label>
                 <input type="number" name="stock" id="stock" value="<?= $productStock; ?>" min="0" max="9999999" placeholder="0" required>
             </div>
         </div>
 
-        <div class="inputContainer <?= $valid["description"] ? "" : "inputError" ?>" id="descriptionContainer">
+        <div class="inputContainer <?= $valid["description"] ? "" : "inputError"; ?>" id="descriptionContainer">
             <label for="description">Description</label>
             <textarea name="description" id="description" placeholder="Product Description"><?= $productDescription; ?></textarea>
         </div>
 
-        <input type="submit" value="<?= $edit ? "Save Changes" : "Add Product" ?>">
+        <input type="submit" value="<?= $edit ? "Save Changes" : "Add Product"; ?>">
     </form>
     <script src="/static/scripts/productEditValidation.js"></script>
 

@@ -34,6 +34,66 @@ class AccountController extends AbstractController {
     }
 
     /**
+     * Manage the users addresses
+     */
+    public function addressesPage() {
+        if (!isset($_SESSION["account"])) {
+            return header("Location: signin");
+        }
+        $accountModel = new AccountModel();
+        $account = $accountModel->getAccountByID($_SESSION["account"]["id"]);
+
+        if (isset($_GET["new"])) {
+            $valid = $this->validateAddress($_POST, $accountModel->countriesList);
+            if (!$valid[0]) {
+                return require "view/account/manage/editAddress.php";
+            }
+            try {
+                $account->addAddress($_POST);
+            }
+            catch (PDOException $e) {
+                $this->showError(500, "Internal Server Error", "An error occurred while adding the address. Please try again later.");
+            }
+            return header("Location: addresses");
+        }
+        else if (isset($_GET["edit"])) {
+            $address = $account->getAddress($_GET["edit"]);
+            $valid = $this->validateAddress($_POST, $accountModel->countriesList);
+            if (!$address) {
+                return $this->showError(404, "Address Not Found", "The address you are trying to edit does not exist.", "addresses", "Back to All Addresses");
+            }
+            if ($valid[0]) {
+                try {
+                    $address->update($_POST);
+                    return header("Location: addresses");
+                }
+                catch (PDOException $e) {
+                    $this->showError(500, "Internal Server Error", "An error occurred while editing the address. Please try again later.");
+                }
+            }
+            return require "view/account/manage/editAddress.php";
+        }
+        else if (isset($_GET["delete"])) {
+            $address = $account->getAddress($_GET["delete"]);
+            if (!$address) {
+                return $this->showError(404, "Address Not Found", "The address you are trying to delete does not exist.", "addresses", "Back to All Addresses");
+            }
+            try {
+                $address->delete();
+            }
+            catch (PDOException $e) {
+                $this->showError(500, "Internal Server Error", "An error occurred while deleting the address. Please try again later.");
+            }
+            return header("Location: addresses");
+        }
+
+        $addresses = $account->getAddresses();
+        require "view/account/manage/addresses.php";
+    }
+
+    
+
+    /**
      * Sign in to an existing account, will then redirect to account
      * index page or verification page if 2fa is enabled.
      */
@@ -83,7 +143,7 @@ class AccountController extends AbstractController {
         }
         
         // Show the sign in page
-        require "view/account/signin.php";
+        require "view/account/signin/signin.php";
     }
 
     /**
@@ -139,7 +199,7 @@ class AccountController extends AbstractController {
             ];
         }
 
-        require 'view/account/register.php';
+        require 'view/account/signin/register.php';
     }
 
     /**
@@ -148,7 +208,7 @@ class AccountController extends AbstractController {
     public function signoutPage() {
         $alreadySignedOut = !isset($_SESSION["account"]);
         session_destroy();
-        require 'view/account/signout.php';
+        require 'view/account/signin/signout.php';
     }
 
     /**
@@ -211,7 +271,7 @@ class AccountController extends AbstractController {
 
         $alreadyHaveEmail = isset($_SESSION["verification"]["email"]);
         $formType = "register";
-        require 'view/account/verification.php';
+        require 'view/account/signin/verification.php';
     }
 
     /**
@@ -237,7 +297,7 @@ class AccountController extends AbstractController {
 
         $alreadyHaveEmail = true;
         $formType = "signin";
-        require 'view/account/verification.php';
+        require 'view/account/signin/verification.php';
     }
 
     /**
@@ -247,6 +307,7 @@ class AccountController extends AbstractController {
      */
     public function signIn($account) {
         $_SESSION["account"] = [
+            "id" => $account->getId(),
             "fullName" => $account->getFullName(),
             "email" => $account->getEmail(),
             "isAdmin" => $account->getIsAdmin()
@@ -323,5 +384,61 @@ class AccountController extends AbstractController {
             "email" => $email,
             "code" => $verificationCode
         ];
+    }
+
+    /**
+     * Validate a users address.
+     * 
+     * @param array $data The data to validate.
+     * @return array of bools for each field.
+     */
+    public function validateAddress($data, $countriesList) {
+        if (empty($data)) {
+            return [
+                0 => false,
+                "name" => true,
+                "address1" => true,
+                "address2" => true,
+                "city" => true,
+                "county" => true,
+                "postcode" => true,
+                "country" => true
+            ];
+        }
+        $valid = [];
+        $valid["name"] = (isset($data["name"]) &&
+            strlen($data["name"]) <= 256 &&
+            strlen($data["name"]) > 0);
+        $valid["address1"] = (isset($data["address1"]) &&
+            strlen($data["address1"]) <= 128 &&
+            strlen($data["address1"]) > 0);
+        $valid["address2"] = (isset($data["address2"]) &&
+            strlen($data["address2"]) <= 128);
+        $valid["city"] = (isset($data["city"]) &&
+            strlen($data["city"]) <= 64 &&
+            strlen($data["city"]) > 0);
+        $valid["county"] = (isset($data["county"]) &&
+            strlen($data["county"]) <= 64);
+        $valid["country"] = (isset($data["country"]) &&
+            array_key_exists($data["country"], $countriesList));
+
+        if ($data["country"] == "GB") {
+            $valid["postcode"] = !!(isset($data["postcode"]) &&
+                preg_match("/^[A-Z]{1,2}[0-9][0-9A-Z](| )[0-9][A-Z]{2}$/",
+                strtoupper($data["postcode"])));
+        }
+        else {
+            $valid["postcode"] = (isset($data["postcode"]) &&
+                strlen($data["postcode"]) <= 8);
+        }
+        $valid[0] = (
+            $valid["name"] &&
+            $valid["address1"] &&
+            $valid["address2"] &&
+            $valid["city"] &&
+            $valid["county"] &&
+            $valid["country"] &&
+            $valid["postcode"]);
+        return $valid;
     }
 }
