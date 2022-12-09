@@ -236,6 +236,23 @@ class Account extends AccountModel implements ModelObjectInterface {
     }
 
     /**
+     * Set two factor status for the account.
+     * 
+     * @param bool $twoFactorEnabled Whether to set two factor status to true or false
+     */
+    public function setTwoFactorEnabled($twoFactorEnabled) {
+        $stmt = $this->dbh->prepare(
+            "UPDATE accounts
+            SET twoFactorEnabled = :twoFactorEnabled
+            WHERE accountID = :accountID");
+        $stmt->bindParam(":accountID", $this->id);
+        $twoFactorEnabled = (int)$twoFactorEnabled;
+        $stmt->bindParam(":twoFactorEnabled", $twoFactorEnabled);
+        $stmt->execute();
+        $this->twoFactorEnabled = $twoFactorEnabled;
+    }
+
+    /**
      * Check if the password matches the hash.
      * 
      * @param string $password The password to check
@@ -243,6 +260,23 @@ class Account extends AccountModel implements ModelObjectInterface {
      */
     public function verifyPassword($password) {
         return password_verify($password, $this->passwordHash);
+    }
+
+    /**
+     * Change the password for the account.
+     * 
+     * @param string $password The new password
+     */
+    public function changePassword($password) {
+        $stmt = $this->dbh->prepare(
+            "UPDATE accounts
+            SET passwordHash = :passwordHash
+            WHERE accountID = :accountID");
+        $stmt->bindParam(":accountID", $this->id);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bindParam(":passwordHash", $passwordHash);
+        $stmt->execute();
+        $this->passwordHash = $passwordHash;
     }
 
     /**

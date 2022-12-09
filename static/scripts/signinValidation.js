@@ -28,6 +28,11 @@ form.addEventListener("submit", function (event) {
             return form.submit();
         }
     }
+    else if (formType === "changePassword") {
+        if (verifyPassword()) {
+            return form.submit();
+        }
+    }
     else {
         if (verifyEmail()) {
             return form.submit();
@@ -139,12 +144,12 @@ function verifyAuth() {
 }
 
 // Add event listeners to check when the user exits the field
-if (formType !== "auth") {
+if (formType != "auth" && formType != "changePassword") {
     var emailContainer = document.getElementById("emailContainer");
     emailContainer.children[1].addEventListener("focusout", verifyEmail);
 }
 
-if (formType === "register") {
+if (formType == "register") {
     var passwordContainer = document.getElementById("passwordContainer");
     var passwordConfContainer = document.getElementById("passwordConfContainer");
     var nameContainer = document.getElementById("nameContainer");
@@ -153,7 +158,13 @@ if (formType === "register") {
     passwordConfContainer.children[1].addEventListener("focusout", verifyPasswordConf);
     nameContainer.children[1].addEventListener("focusout", verifyName);
 }
-else if (formType === "auth" || formType === "authWithEmail") {
+else if (formType == "auth" || formType == "authWithEmail") {
     var authContainer = document.getElementById("authContainer");
     authContainer.children[1].addEventListener("focusout", verifyAuth);
+}
+else if (formType == "changePassword") {
+    var passwordContainer = document.getElementById("passwordContainer");
+    var passwordConfContainer = document.getElementById("passwordConfContainer");
+    passwordContainer.children[1].addEventListener("focusout", verifyPassword);
+    passwordConfContainer.children[1].addEventListener("focusout", verifyPasswordConf);
 }

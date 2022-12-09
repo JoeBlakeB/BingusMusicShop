@@ -28,7 +28,7 @@ class AccountController extends AbstractController {
      */
     public function detailsPage() {
         if (!isset($_SESSION["account"])) {
-            return header("Location: signin");
+            return header("Location: $this->basePath/account/signin");
         }
         require "view/account/details.php";
     }
@@ -144,6 +144,37 @@ class AccountController extends AbstractController {
 
         $cards = $account->getCards();
         require "view/account/manage/payments.php";
+    }
+
+    /**
+     * Manage the users password and two factor authentication
+     */
+    public function securityPage() {
+        if (!isset($_SESSION["account"])) {
+            return header("Location: signin");
+        }
+        $accountModel = new AccountModel();
+        $account = $accountModel->getAccountByID($_SESSION["account"]["id"]);
+        if (isset($_GET["2fa"])) {
+            $account->setTwoFactorEnabled($_GET["2fa"] == "enable");
+        }
+        if (!empty($_POST)) {
+            $valid = [
+                "currentPassword" => $account->verifyPassword($_POST["currentPassword"]),
+                "newPassword" => $this->isPasswordValid($_POST["newPassword"]),
+                "confirmPassword" => $_POST["newPassword"] == $_POST["confirmPassword"]
+            ];
+            if ($valid["currentPassword"] && $valid["newPassword"] && $valid["confirmPassword"]) {
+                try {
+                    $account->changePassword($_POST["newPassword"]);
+                    $success = "Your password has been changed.";
+                }
+                catch (PDOException $e) {
+                    $this->showError(500, "Internal Server Error", "An error occurred while changing the password. Please try again later.");
+                }
+            }
+        }
+        require "view/account/manage/security.php";
     }
 
     /**
