@@ -4,12 +4,12 @@
 <head>
     <?php
     $title = "Account Details";
-    require "head.php";
+    require "include/head.php";
     ?>
 </head>
 
 <body>
-    <?php require "header.php"; ?>
+    <?php require "include/header.php"; ?>
     <div class="content">
         <h1>Your Account</h1>
         <p>Hello <?php echo $_SESSION["account"]["fullName"]; ?>, you are currently signed in.</p>

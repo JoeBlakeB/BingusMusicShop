@@ -5,12 +5,12 @@
     <?php
     $title = $product->getName();
     $images = $product->getImages();
-    require "head.php";
+    require "include/head.php";
     ?>
 </head>
 
 <body>
-    <?php require "header.php"; ?>
+    <?php require "include/header.php"; ?>
     <div class="content viewProduct <?= empty($images) ? "noImages" : "" ?>">
         <h1><?= $product->getName() ?></h1>
 

@@ -4,7 +4,7 @@
 <head>
     <?php
     $title = "Sign In";
-    require "head.php";
+    require "include/head.php";
     ?>
     <link rel="stylesheet" href="/static/styles/signin.css">
 </head>

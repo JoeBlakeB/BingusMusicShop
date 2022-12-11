@@ -4,7 +4,7 @@
 <head>
     <?php
     $title = "Account Security";
-    require "head.php";
+    require "include/head.php";
     $twoFactorEnabled = $account->getIsTwoFactorEnabled();
 
     if (!isset($valid)) {
@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <?php require "header.php"; ?>
+    <?php require "include/header.php"; ?>
     <div class="content">
         <h1>Account Security</h1>
         <p><a class="button" href=".">Back to Account</a></p>

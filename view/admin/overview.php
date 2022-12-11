@@ -4,12 +4,12 @@
 <head>
     <?php
     $title = "Admin";
-    require "head.php";
+    require "include/head.php";
     ?>
 </head>
 
 <body>
-    <?php require "header.php"; ?>
+    <?php require "include/header.php"; ?>
 
     <div class="content">
         <h1>Admin - Overview</h1>

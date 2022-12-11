@@ -12,7 +12,14 @@
         }
         ?>"><button type="submit"><i class="fa fa-search"></i></button>
     </div>
-    <button onclick="document.querySelector('header').classList.toggle('showDropdown')" id="headerButtonsDropdown"><i class="fa-solid fa-bars"></i></button>
+    <button id="headerButtonsDropdown" <?php
+        if (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) {
+            echo "onclick=\"document.querySelector('header').classList.toggle('showDropdown')\"><i class=\"fa-solid fa-bars\"";
+        }
+        else {
+            echo "onclick=\"window.location.href = '$this->basePath/account'\"><i class=\"fa-solid fa-user\"";
+        }
+    ?>></i></button>
     <div id="headerButtons">
         <a href="<?= "$this->basePath/account/" . 
             (isset($_SESSION["account"]) ? "" : "signin"); ?>">
@@ -26,15 +33,12 @@
                     "or Register"); ?></p>
             </div>
         </a>
-        <a href="#">
-        <a href="<?= $this->basePath .
-            ((isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
-                "/admin" : "/products/orders"); ?>">
+        <?php if (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) { ?>
+        <a href="<?= $this->basePath; ?>/admin">
             <div class="headerButtonCenter">
-                <h3>
-                    <?= (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) ?
-                        "Admin" : "Orders"; ?></h3>
+                <h3>Admin</h3>
             </div>
         </a>
+        <?php } ?>
     </div>
 </header>

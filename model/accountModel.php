@@ -29,8 +29,7 @@ class AccountModel extends AbstractModel {
             LEFT JOIN unverifiedAccounts
             USING (accountID)
             WHERE " . $where . " = :value");
-        $stmt->bindParam(":value", $value);
-        $stmt->execute();
+        $stmt->execute(["value" => $value]);
         $account = $stmt->fetch();
         if ($account) {
             return new Account($this->dbh, $account);
@@ -76,12 +75,13 @@ class AccountModel extends AbstractModel {
             VALUES (:email, :passwordHash, :fullName);
             INSERT INTO unverifiedAccounts (accountID, verificationCode, expires)
             VALUES (LAST_INSERT_ID(), :verificationCode, :expires);");
-        $stmt->bindParam(":email", strtolower($email));
-        $stmt->bindParam(":passwordHash", $passwordHash);
-        $stmt->bindParam(":fullName", $name);
-        $stmt->bindParam(":verificationCode", $verificationCode);
-        $stmt->bindParam(":expires", $expires);
-        $stmt->execute();
+        $stmt->execute([
+            "email" => strtolower($email),
+            "passwordHash" => $passwordHash,
+            "fullName" => $name,
+            "verificationCode" => $verificationCode,
+            "expires" => $expires
+        ]);
     }
 
     /**
@@ -200,8 +200,9 @@ class Account extends AccountModel implements ModelObjectInterface {
         $stmt = $this->dbh->prepare(
             "DELETE FROM unverifiedAccounts
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id
+        ]);
         $this->verificationCode = null;
         $this->expires = null;
     }
@@ -213,8 +214,9 @@ class Account extends AccountModel implements ModelObjectInterface {
         $stmt = $this->dbh->prepare(
             "DELETE FROM accounts
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id
+        ]);
         $this->id = null;
     }
 
@@ -228,10 +230,10 @@ class Account extends AccountModel implements ModelObjectInterface {
             "UPDATE accounts
             SET isAdmin = :isAdmin
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $this->id);
-        $isAdmin = (int)$isAdmin;
-        $stmt->bindParam(":isAdmin", $isAdmin);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id,
+            "isAdmin" => (int)$isAdmin
+        ]);
         $this->isAdmin = $isAdmin;
     }
 
@@ -245,10 +247,10 @@ class Account extends AccountModel implements ModelObjectInterface {
             "UPDATE accounts
             SET twoFactorEnabled = :twoFactorEnabled
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $this->id);
-        $twoFactorEnabled = (int)$twoFactorEnabled;
-        $stmt->bindParam(":twoFactorEnabled", $twoFactorEnabled);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id,
+            "twoFactorEnabled" => (int)$twoFactorEnabled
+        ]);
         $this->twoFactorEnabled = $twoFactorEnabled;
     }
 
@@ -272,10 +274,11 @@ class Account extends AccountModel implements ModelObjectInterface {
             "UPDATE accounts
             SET passwordHash = :passwordHash
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $this->id);
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bindParam(":passwordHash", $passwordHash);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id,
+            "passwordHash" => $passwordHash
+        ]);
         $this->passwordHash = $passwordHash;
     }
 
@@ -288,15 +291,16 @@ class Account extends AccountModel implements ModelObjectInterface {
         $stmt = $this->dbh->prepare(
             "INSERT INTO addresses (accountID, fullName, addressLine1, addressLine2, city, county, postcode, country)
             VALUES (:accountID, :name, :address1, :address2, :city, :county, :postcode, :country)");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->bindParam(":name", $data["name"]);
-        $stmt->bindParam(":address1", $data["address1"]);
-        $stmt->bindParam(":address2", $data["address2"]);
-        $stmt->bindParam(":city", $data["city"]);
-        $stmt->bindParam(":county", $data["county"]);
-        $stmt->bindParam(":postcode", $data["postcode"]);
-        $stmt->bindParam(":country", $data["country"]);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id,
+            "name" => $data["name"],
+            "address1" => $data["address1"],
+            "address2" => $data["address2"],
+            "city" => $data["city"],
+            "county" => $data["county"],
+            "postcode" => $data["postcode"],
+            "country" => $data["country"]
+        ]);
     }
 
     /**
@@ -308,8 +312,9 @@ class Account extends AccountModel implements ModelObjectInterface {
         $stmt = $this->dbh->prepare(
             "SELECT * FROM addresses
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id
+        ]);
         return $this->createObjectArray($stmt->fetchAll(), Address::class);
     }
 
@@ -321,9 +326,10 @@ class Account extends AccountModel implements ModelObjectInterface {
             "SELECT * FROM addresses
             WHERE accountID = :accountID
             AND addressID = :addressID");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->bindParam(":addressID", $addressID);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id,
+            "addressID" => $addressID
+        ]);
         $data = $stmt->fetch();
         if ($data === false) {
             return null;
@@ -340,13 +346,14 @@ class Account extends AccountModel implements ModelObjectInterface {
         $stmt = $this->dbh->prepare(
             "INSERT INTO cards (accountID, fullName, cardNumber, securityCode, expiryMonth, expiryYear)
             VALUES (:accountID, :name, :cardNumber, :securityCode, :expiryMonth, :expiryYear)");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->bindParam(":name", $data["name"]);
-        $stmt->bindParam(":cardNumber", $data["cardNumber"]);
-        $stmt->bindParam(":securityCode", $data["securityCode"]);
-        $stmt->bindParam(":expiryMonth", $data["expiryMonth"]);
-        $stmt->bindParam(":expiryYear", $data["expiryYear"]);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id,
+            "name" => $data["name"],
+            "cardNumber" => $data["cardNumber"],
+            "securityCode" => $data["securityCode"],
+            "expiryMonth" => $data["expiryMonth"],
+            "expiryYear" => $data["expiryYear"]
+        ]);
     }
 
     /**
@@ -358,8 +365,9 @@ class Account extends AccountModel implements ModelObjectInterface {
         $stmt = $this->dbh->prepare(
             "SELECT * FROM cards
             WHERE accountID = :accountID");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id
+        ]);
         return $this->createObjectArray($stmt->fetchAll(), Card::class);
     }
 
@@ -371,9 +379,10 @@ class Account extends AccountModel implements ModelObjectInterface {
             "SELECT * FROM cards
             WHERE accountID = :accountID
             AND cardID = :cardID");
-        $stmt->bindParam(":accountID", $this->id);
-        $stmt->bindParam(":cardID", $cardID);
-        $stmt->execute();
+        $stmt->execute([
+            "accountID" => $this->id,
+            "cardID" => $cardID
+        ]);
         $data = $stmt->fetch();
         if ($data === false) {
             return null;
@@ -473,15 +482,16 @@ class Address extends AccountModel implements ModelObjectInterface {
                 postcode = :postcode,
                 country = :country
             WHERE addressID = :addressID");
-        $stmt->bindParam(":addressID", $this->id);
-        $stmt->bindParam(":name", $data["name"]);
-        $stmt->bindParam(":address1", $data["address1"]);
-        $stmt->bindParam(":address2", $data["address2"]);
-        $stmt->bindParam(":city", $data["city"]);
-        $stmt->bindParam(":county", $data["county"]);
-        $stmt->bindParam(":postcode", $data["postcode"]);
-        $stmt->bindParam(":country", $data["country"]);
-        $stmt->execute();
+        $stmt->execute([
+            "addressID" => $this->id,
+            "name" => $data["name"],
+            "address1" => $data["address1"],
+            "address2" => $data["address2"],
+            "city" => $data["city"],
+            "county" => $data["county"],
+            "postcode" => $data["postcode"],
+            "country" => $data["country"]
+        ]);
     }
 
     /**
@@ -491,8 +501,9 @@ class Address extends AccountModel implements ModelObjectInterface {
         $stmt = $this->dbh->prepare(
             "DELETE FROM addresses
             WHERE addressID = :addressID");
-        $stmt->bindParam(":addressID", $this->id);
-        $stmt->execute();
+        $stmt->execute([
+            "addressID" => $this->id
+        ]);
     }
 }
 
@@ -590,13 +601,14 @@ class Card extends AccountModel implements ModelObjectInterface {
                 expiryMonth = :expiryMonth,
                 expiryYear = :expiryYear
             WHERE cardID = :cardID");
-        $stmt->bindParam(":cardID", $this->id);
-        $stmt->bindParam(":name", $data["name"]);
-        $stmt->bindParam(":cardNumber", $data["cardNumber"]);
-        $stmt->bindParam(":securityCode", $data["securityCode"]);
-        $stmt->bindParam(":expiryMonth", $data["expiryMonth"]);
-        $stmt->bindParam(":expiryYear", $data["expiryYear"]);
-        $stmt->execute();
+        $stmt->execute([
+                "cardID" => $this->id,
+                "name" => $data["name"],
+                "cardNumber" => $data["cardNumber"],
+                "securityCode" => $data["securityCode"],
+                "expiryMonth" => $data["expiryMonth"],
+                "expiryYear" => $data["expiryYear"]
+        ]);
     }
 
     /**
@@ -607,7 +619,8 @@ class Card extends AccountModel implements ModelObjectInterface {
             "DELETE FROM cards
             WHERE cardID = :cardID"
         );
-        $stmt->bindParam(":cardID", $this->id);
-        $stmt->execute();
+        $stmt->execute([
+            "cardID" => $this->id
+        ]);
     }
 }

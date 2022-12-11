@@ -4,7 +4,7 @@
 <head>
     <?php
     $title = "Address Management";
-    require "head.php";
+    require "include/head.php";
 
     $fullName = isset($_POST["name"]) ? $_POST["name"] : (
         isset($address) ? $address->getFullName() : $_SESSION["account"]["fullName"]);
@@ -24,7 +24,7 @@
 </head>
 
 <body>
-    <?php require "header.php"; ?>
+    <?php require "include/header.php"; ?>
     <div class="content">
         <h1><?= isset($address) ? "Edit Address" : "New Address"; ?></h1>
 
