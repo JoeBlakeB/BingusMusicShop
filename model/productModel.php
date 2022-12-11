@@ -27,6 +27,105 @@ class ProductModel extends AbstractModel {
     }
 
     /**
+     * Search for products.
+     * Supported sort methodds: 
+     * - relevance (default)
+     *    -- Sort by relevance to the search term.
+     *    -- LIKE complete search term in name ranks highest
+     *    -- LIKE single words in description ranks lowest
+     * - name + _asc and _desc
+     * - price + _asc and _desc
+     * - newest and oldest
+     * 
+     * @param string $sort The sort order.
+     * @param int $count The number of products to return.
+     * @param int $offset The offset of the products to return.
+     * @param string $searchTerm The search term.
+     * @return array The products as objects.
+     */
+    public function search($sort, $count=6, $offset=0, $searchTerm="") {
+        $imagesTableSql = "(SELECT productID, fileHash, fileType
+                FROM images
+                WHERE imageID in (
+                    SELECT MAX(imageID)
+                    FROM images
+                    GROUP BY productID
+            )) AS images";
+
+        $sortMethods = [
+            "name_asc" => "name ASC, price DESC",
+            "name_desc" => "name DESC, price DESC",
+            "price_asc" => "price ASC, name ASC",
+            "price_desc" => "price DESC, name ASC",
+            "newest" => "productID DESC",
+            "oldest" => "productID ASC",
+            "random" => "RAND()"
+        ];
+        $sort = in_array($sort, array_keys($sortMethods)) ? $sortMethods[$sort] : (
+            strpos($searchTerm, " ") && substr_count($searchTerm, " ") < 8 ? "relevance" : "productID DESC");
+
+        if ($sort == "relevance") {
+            $this->searchTableIndex = 0;
+            $this->searchTableSql = "";
+            $this->searchTableParams = [];
+            $this->genRelevanceSelect($searchTerm, 1000, 200);
+            $this->searchTableSql .= " UNION ";
+            $this->genRelevanceSelect(str_replace(" ", "%", $searchTerm), 250, 80);
+            foreach (explode(" ", $searchTerm) as $searchSegment) {
+                $len = strlen($searchSegment);
+                if ($len > 3) {
+                    $len *= (int)($len > 6 ? 1.5 : 1);
+                    $this->searchTableSql .= " UNION ";
+                    $this->genRelevanceSelect($searchSegment, $len * 8, $len);
+                }
+            }
+
+            $stmt = $this->dbh->prepare("SELECT search.productID, search.name, 
+                    search.description, search.price, search.stock, images.fileHash, 
+                    images.fileType, SUM(search.relevance) AS relevance
+                FROM ( $this->searchTableSql ) AS search LEFT JOIN $imagesTableSql
+                ON search.productID = images.productID
+                GROUP BY search.productID, search.name, search.description, 
+                    search.price, search.stock, images.fileHash, images.fileType
+                HAVING relevance > 75
+                AND search.stock > 0
+                ORDER BY relevance DESC, productID DESC
+                LIMIT " . (int)$count . " OFFSET " . (int)$offset);
+            $stmt->execute($this->searchTableParams);
+        }
+        else {
+            $stmt = $this->dbh->prepare(
+                "SELECT products.*, images.fileHash, images.fileType
+                FROM products LEFT JOIN $imagesTableSql
+                ON products.productID = images.productID
+                WHERE name LIKE :searchTerm
+                AND products.stock > 0
+                ORDER BY $sort 
+                LIMIT ".(int)$count." OFFSET ".(int)$offset);
+            $stmt->execute(["searchTerm" => "%$searchTerm%"]);
+        }
+        return $this->createObjectArray($stmt->fetchAll(), Product::class);
+    }
+
+    /**
+     * Generate a SELECT for the relevance search.
+     * Sets the $searchTableSql and $searchTableParams properties.
+     * 
+     * @param string $searchSegment The search term or segment.
+     * @param int $relevanceName The relevance if in the name.
+     * @param int $relevanceDesc The relevance if in the description.
+     */
+    private function genRelevanceSelect($searchSegment, $relevanceName, $relevanceDesc) {
+        $this->searchTableSql .= 
+            "SELECT productID, name, description, price, stock, $relevanceName AS relevance FROM products
+            WHERE name LIKE :param$this->searchTableIndex
+            UNION
+            SELECT productID, name, description, price, stock, $relevanceDesc AS relevance FROM products
+            WHERE description LIKE :param$this->searchTableIndex";
+        $this->searchTableParams["param" . ($this->searchTableIndex++)] = "%$searchSegment%";
+    }
+
+    /**
      * Get a product by its id.
      * 
      * @param int $productID The id of the product.
@@ -139,6 +238,7 @@ class Product extends ProductModel implements ModelObjectInterface {
     private $price;
     private $stock;
     private $imageCount;
+    private $images;
 
     public function __construct(&$dbh, $data) {
         $this->dbh = $dbh;
@@ -147,7 +247,18 @@ class Product extends ProductModel implements ModelObjectInterface {
         $this->description = $data["description"];
         $this->price = $data["price"];
         $this->stock = $data["stock"];
-        $this->imageCount = $data["imageCount"];
+        if (isset($data["fileHash"])) {
+            $this->images = [
+                "fileHash" => $data["fileHash"],
+                "fileType" => $data["fileType"],
+                "url" => "/images/" . $data["fileHash"]
+                              . "." . $data["fileType"]
+            ];
+            $this->imageCount = 1;
+        }
+        else {
+            $this->imageCount = $data["imageCount"];
+        }
     }
 
     /**
@@ -201,20 +312,25 @@ class Product extends ProductModel implements ModelObjectInterface {
 
     /**
      * Get the images for the product.
+     * Will get only the first image if the product was got from a search.
      * 
      * @return array An array of arrays containing the images metadata.
      */
     public function getImages() {
-        $stmt = $this->dbh->prepare(
-            "SELECT * FROM images
+        if (!isset($this->images)) {
+            $stmt = $this->dbh->prepare(
+                "SELECT * FROM images
             WHERE productID = :productID
-            ORDER BY imageID DESC;");
-        $stmt->execute(["productID" => $this->id]);
-        $images = $stmt->fetchAll();
-        foreach ($images as &$image) {
-            $image["url"] = "/images/" . $image["fileHash"] . "." . $image["fileType"];
+            ORDER BY imageID DESC;"
+            );
+            $stmt->execute(["productID" => $this->id]);
+            $images = $stmt->fetchAll();
+            foreach ($images as &$image) {
+                $image["url"] = "/images/" . $image["fileHash"] . "." . $image["fileType"];
+            }
         }
-        return $images;
+        $this->images = $images;
+        return $this->images;
     }
 
     /**
