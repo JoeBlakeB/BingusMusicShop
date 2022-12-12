@@ -23,7 +23,7 @@
 
 <body>
     <?php require "include/header.php"; ?>
-    <div class="content">
+    <div class="content multipleContents">
         <h1>Account Security</h1>
         <p><a class="button" href=".">Back to Account</a></p>
         <h2>Two Factor Authentication</h2>

@@ -7,9 +7,15 @@
  * @param {event} event - The event that triggered this function.
  */
 function setSelectedImage(event) {
+    if (event.target.src == undefined) {
+        target = event.target.children[0];
+    }
+    else {
+        target = event.target;
+    }
     document.getElementsByClassName("selected")[0].classList.remove("selected");
-    event.target.classList.add("selected");
-    selectedImage.src = event.target.src;
+    target.classList.add("selected");
+    selectedImage.src = target.src;
 }
 
 // Add event listeners to the image list

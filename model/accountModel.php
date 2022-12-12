@@ -417,9 +417,6 @@ class Address extends AccountModel implements ModelObjectInterface {
         $this->country = $data["country"];
     }
     
-    /**
-     * @return string The full address
-     */
     public function __toString() {
         $address = [
             htmlspecialchars($this->fullName),
@@ -433,34 +430,58 @@ class Address extends AccountModel implements ModelObjectInterface {
         return implode(",<br>", array_filter($address));
     }
 
+    /**
+     * @return int The address ID
+     */
     public function getID() {
         return $this->id;
     }
 
+    /**
+     * @return string The full name on the address
+     */
     public function getFullName() {
         return htmlspecialchars($this->fullName);
     }
 
+    /**
+     * @return string The first line of the address
+     */
     public function getAddress1() {
         return htmlspecialchars($this->addressLine1);
     }
 
+    /**
+     * @return string The second line of the address (or empty string if not set)
+     */
     public function getAddress2() {
         return htmlspecialchars($this->addressLine2);
     }
 
+    /**
+     * @return string The city
+     */
     public function getCity() {
         return htmlspecialchars($this->city);
     }
 
+    /**
+     * @return string The county (or empty string if not set)
+     */
     public function getCounty() {
         return htmlspecialchars($this->county);
     }
 
+    /**
+     * @return string The postcode
+     */
     public function getPostcode() {
         return htmlspecialchars($this->postcode);
     }
 
+    /**
+     * @return string The two character country code
+     */
     public function getCountryCode() {
         return $this->country;
     }
@@ -536,17 +557,22 @@ class Card extends AccountModel implements ModelObjectInterface {
             $this->getExpiry();
     }
 
+    /**
+     * @return int The card ID
+     */
     public function getID() {
         return $this->id;
     }
 
+    /**
+     * @return string the full name on the card.
+     */
     public function getFullName() {
         return htmlspecialchars($this->fullName);
     }
 
     /**
-     * Get the last four digits of the card number
-     * with • for the first 12 digits.
+     * @return string 12 • and the last 4 digits of the card number
      */
     public function getCardNumberHidden() {
         return "•••• •••• •••• " . substr($this->cardNumber, -4);
@@ -571,18 +597,30 @@ class Card extends AccountModel implements ModelObjectInterface {
         return $expiry < $now;
     }
 
+    /**
+     * @return string The 16 digit card number
+     */
     public function getCardNumber() {
         return $this->cardNumber;
     }
 
+    /**
+     * @return string The CCV/CVC
+     */
     public function getSecurityCode() {
         return $this->securityCode;
     }
 
+    /**
+     * @return int The expiry month
+     */
     public function getExpiryMonth() {
         return $this->expiryMonth;
     }
 
+    /**
+     * @return int The expiry year
+     */
     public function getExpiryYear() {
         return $this->expiryYear;
     }

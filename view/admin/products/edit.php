@@ -33,7 +33,7 @@
 <body>
     <?php require "include/header.php"; ?>
 
-    <div class="content">
+    <div class="content multipleContents">
         <h1>Admin - <?= $edit ?
             "Edit a Product" :
             "Add a new Product"; ?>
@@ -70,7 +70,7 @@
         <h2><?= $edit ? $product->getName() : ""; ?></h2>
     </div>
 
-    <form action="<?= $edit ? "edit?id=" . $product->getID() : "new"; ?>" method="post" class="editForm">
+    <form action="<?= $edit ? "edit?id=" . $product->getID() : "new"; ?>" method="post" class="editForm multipleContents">
         <div class="grid threeColumns uneven">
             <div class="inputContainer <?= $valid["name"] ? "" : "inputError"; ?>" id="nameContainer">
                 <label for="name">Name</label>

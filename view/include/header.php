@@ -6,11 +6,11 @@
         </a>
     </div>
     <div id="headerSearch">
-        <input type="text" placeholder="Search..." value="<?php 
-        if (isset($_GET['search'])) {
-            echo $_GET['search'];
+        <input type="text" id="searchBar" placeholder="Search..." value="<?php 
+        if (isset($searchTerm)) {
+            echo $searchTerm;
         }
-        ?>"><button type="submit"><i class="fa fa-search"></i></button>
+        ?>"><button id="searchButton" type="submit"><i class="fa fa-search"></i></button>
     </div>
     <button id="headerButtonsDropdown" <?php
         if (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) {
@@ -41,4 +41,6 @@
         </a>
         <?php } ?>
     </div>
+    <script> var basePath = "<?= $this->basePath; ?>"; </script>
+    <script src="/static/scripts/searchbar.js"></script>
 </header>

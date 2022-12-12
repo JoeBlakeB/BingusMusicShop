@@ -39,11 +39,13 @@ class ProductModel extends AbstractModel {
      * 
      * @param string $sort The sort order.
      * @param int $count The number of products to return.
-     * @param int $offset The offset of the products to return.
+     * @param int $page The page of the products to return.
      * @param string $searchTerm The search term.
-     * @return array The products as objects.
+     * @return array $results and $totalPages
+     * - The products as objects.
+     * - The total number of pages.
      */
-    public function search($sort, $count=6, $offset=0, $searchTerm="") {
+    public function search($sort, $count=4, $page=1, $searchTerm="") {
         $imagesTableSql = "(SELECT productID, fileHash, fileType
                 FROM images
                 WHERE imageID in (
@@ -87,10 +89,9 @@ class ProductModel extends AbstractModel {
                 ON search.productID = images.productID
                 GROUP BY search.productID, search.name, search.description, 
                     search.price, search.stock, images.fileHash, images.fileType
-                HAVING relevance > 75
+                HAVING relevance > " . (30 + (3*strlen($searchTerm))) . "
                 AND search.stock > 0
-                ORDER BY relevance DESC, productID DESC
-                LIMIT " . (int)$count . " OFFSET " . (int)$offset);
+                ORDER BY relevance DESC, productID DESC");
             $stmt->execute($this->searchTableParams);
         }
         else {
@@ -100,11 +101,15 @@ class ProductModel extends AbstractModel {
                 ON products.productID = images.productID
                 WHERE name LIKE :searchTerm
                 AND products.stock > 0
-                ORDER BY $sort 
-                LIMIT ".(int)$count." OFFSET ".(int)$offset);
+                ORDER BY $sort");
             $stmt->execute(["searchTerm" => "%$searchTerm%"]);
         }
-        return $this->createObjectArray($stmt->fetchAll(), Product::class);
+
+        $data = $stmt->fetchAll();
+        $totalPages = ceil(count($data) / $count);
+        $data = array_slice($data, ($page-1)*$count, $count);
+
+        return [$this->createObjectArray($data, Product::class), $totalPages];
     }
 
     /**
@@ -248,12 +253,12 @@ class Product extends ProductModel implements ModelObjectInterface {
         $this->price = $data["price"];
         $this->stock = $data["stock"];
         if (isset($data["fileHash"])) {
-            $this->images = [
+            $this->images = [[
                 "fileHash" => $data["fileHash"],
                 "fileType" => $data["fileType"],
                 "url" => "/images/" . $data["fileHash"]
                               . "." . $data["fileType"]
-            ];
+            ]];
             $this->imageCount = 1;
         }
         else {
@@ -328,8 +333,8 @@ class Product extends ProductModel implements ModelObjectInterface {
             foreach ($images as &$image) {
                 $image["url"] = "/images/" . $image["fileHash"] . "." . $image["fileType"];
             }
+            $this->images = $images;
         }
-        $this->images = $images;
         return $this->images;
     }
 

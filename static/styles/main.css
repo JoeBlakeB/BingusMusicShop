@@ -245,6 +245,12 @@ header a {
     width: min-content;
 }
 
+.content:not(.multipleContents),
+.editForm:not(.multipleContents),
+.centeredContent:not(.multipleContents) {
+    margin-bottom: 16px;
+}
+
 .centeredContent {
     text-align: center;
     padding: 0 16px;
@@ -330,7 +336,7 @@ input[type=submit] {
     width: calc(100% - 200px);
 }
 
-.basicResponsiveForm select {
+select {
     height: 32px;
     margin: 4px 0;
     border: 1px solid #8f8f9d;
@@ -474,6 +480,172 @@ input[type=file] {
     color: red;
 }
 
+/* Product List */
+
+.productList {
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.product {
+    max-width: 100%;
+    border: 2px solid var(--theme-main);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.product img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 4px;
+    display: block;
+}
+
+@media screen and (max-width: 1200px) {
+    .productList {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .homepage .productList .product:last-child {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .productList {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .homepage .productList .product:nth-child(3),
+    .homepage .productList .product:nth-child(4) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .productList {
+        grid-template-columns: 1fr;
+    }
+}
+
+.product h3 {
+    margin: 4px 0 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 50px;
+}
+
+.product p {
+    margin: 4px 0 2px;
+}
+
+.product a {
+    color: var(--theme-main);
+}
+
+.product a:visited {
+    color: #5d3075;
+}
+
+.product a:hover {
+    color: #5f38b9;
+}
+
+.product a:active {
+    color: var(--theme-purple)
+}
+
+.searchOptions {
+    margin: 6px 2px 6px auto;
+    width: max-content;
+    height: max-content;
+}
+
+.searchOptions label {
+    margin-left: 10px;
+}
+
+.searchOptions div {
+    display: inline-block;
+}
+
+.searchOptions select {
+    border-radius: 2px;
+    height: unset;
+}
+
+@media screen and (max-width: 425px) {
+    .searchOptions div {
+        display: block;
+        margin-left: auto;
+        width: max-content;
+    }
+}
+
+/* Page Selector */
+#pageSelector {
+    cursor: default;
+    user-select: none;
+    background-color: var(--theme-main);
+    color: white;
+    border-radius: 8px;
+    width: max-content;
+    margin: 12px auto;
+    font-size: 14pt;
+}
+
+#pageSelector > span {
+    width: 22px;
+    padding: 4px;
+    display: inline-block;
+    text-align: center;
+}
+
+#pageSelector > span:not(.spacer) {
+    cursor: pointer;
+}
+
+#pageSelector > span:first-child,
+#pageSelector > span:last-child {
+    width: 100px;
+}
+
+#pageSelector > span.currentPage {
+    background-color: var(--theme-purple);
+    color: var(--theme-main)
+}
+
+@media screen and (max-width: 800px) {
+    #pageSelector > span:first-child,
+    #pageSelector > span:last-child {
+        width: 22px;
+    }
+
+    #pageSelector > span > span {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #pageSelector {
+        font-size: 12pt;
+    }
+
+    #pageSelector > span {
+        width: 18px;
+        padding: 2px;
+    }
+
+    #pageSelector > span.hideable {
+        display: none;
+    }
+}
+
 /* Product View */
 
 .viewProduct {
@@ -490,7 +662,8 @@ input[type=file] {
 
 @media screen and (max-width: 800px) {
     .imageViewContainer {
-        width: calc(100% - 4px);
+        width: 100%;
+        box-sizing: border-box;
     }
 }
 
@@ -500,11 +673,12 @@ input[type=file] {
     margin: 4px 0
 }
 
-.imageViewContainer #selectedImage {
+.imageViewContainer img#selectedImage {
     max-width: 100%;
     max-height: 100%;
     display: block;
     margin: auto;
+    height: 100%;
 }
 
 .imageViewContainer .imageList {
@@ -551,7 +725,7 @@ input[type=file] {
     .viewProduct:not(.noImages) h1,
     .viewProduct:not(.noImages) h3 {
         float: right;
-        width: calc(35% + 118px);
+        width: calc(35% + 115px);
         padding: 0 12px 0 0;
     }
 
@@ -581,6 +755,10 @@ input[type=file] {
     .viewProduct p {
         margin: 0 0 12px;
     }
+}
+
+.outOfStock {
+    color: #600;
 }
 
 /* Address List & Payment Methods List */
@@ -642,8 +820,4 @@ footer p {
     footer br {
         display: none;
     }
-}
-
-body > *:nth-last-child(2) {
-    margin-bottom: 16px;
 }

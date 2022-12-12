@@ -17,7 +17,7 @@
 
 <body>
     <?php require "include/header.php"; ?>
-    <div class="content">
+    <div class="content multipleContents">
         <h1><?= isset($card) ? "Edit Credit or Debit Card" : "New Credit or Debit Card"; ?></h1>
 
         <p><a class="button" href="payments">Back to All Payment Methods</a></p>

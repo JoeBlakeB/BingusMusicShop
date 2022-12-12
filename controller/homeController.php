@@ -7,13 +7,23 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
+require "model/productModel.php";
+
 class HomeController extends AbstractController {
     public function invoke() {
-        if (empty($this->uri)) {
-            require "view/home.php";
+        if (!empty($this->uri)) {
+            $this->pageNotFound();
         }
-        else {
-            $this->showError(404, "Page Not Found", "The page you requested could not be found.");
+
+        try {
+            $productModel = new ProductModel();
+            $productsFeatured = $productModel->search("random")[0];
+            $productsNew = $productModel->search("newest")[0];
         }
+        catch (PDOException $e) {
+            $message = "Please use the search bar above to find the things you're looking for.";
+        }
+        
+        require "view/home.php";
     }
 }

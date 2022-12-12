@@ -25,7 +25,7 @@
 
 <body>
     <?php require "include/header.php"; ?>
-    <div class="content">
+    <div class="content multipleContents">
         <h1><?= isset($address) ? "Edit Address" : "New Address"; ?></h1>
 
         <p><a class="button" href="addresses">Back to All Addresses</a></p>

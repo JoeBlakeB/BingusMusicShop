@@ -16,22 +16,22 @@ class SearchController extends AbstractController {
     public function invoke() {
         $this->maxPathLength(1, 1);
         $searchTerm = isset($_GET["q"]) ? trim($_GET["q"]) : "";
-        $count = isset($_GET["itemsPerPage"]) && is_numeric($_GET["itemsPerPage"]) ? $_GET["itemsPerPage"] : 10;
-        $offset = isset($_GET["page"]) && is_numeric($_GET["page"]) ? $_GET["page"] * $count : 0;
+        $count = isset($_GET["itemsPerPage"]) && is_numeric($_GET["itemsPerPage"]) ? $_GET["itemsPerPage"] : 12;
+        $page = isset($_GET["page"]) && 
+                is_numeric($_GET["page"]) && 
+                (int)$_GET["page"] > 0 ? $_GET["page"] : 1;
         $sort = isset($_GET["sort"]) ? $_GET["sort"] : "relevance";
 
         try {
             $productModel = new ProductModel();
-            $results = $productModel->search($sort, $count, $offset, $searchTerm);
-            if (!empty($results)) {
-                foreach ($results as &$product) {
-                    var_dump($product);
-                    echo "<hr>";
-                }
-            }
+            $results = $productModel->search($sort, $count, $page, $searchTerm);
+            $totalPages = $results[1];
+            $results = $results[0];
         }
         catch (PDOException $e) {
             $this->showError(500, "Internal Server Error", "An error occurred while trying to search for products.");
         }
+
+        require "view/search.php";
     }
 }
