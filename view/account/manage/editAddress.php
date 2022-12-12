@@ -68,6 +68,7 @@
         <input type="submit" value="Save">
     </form>
     <script src="/static/scripts/postcodeValidation.js"></script>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

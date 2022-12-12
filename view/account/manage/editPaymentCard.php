@@ -57,6 +57,7 @@
         </div>
         <input type="submit" value="Save">
     </form>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

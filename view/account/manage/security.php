@@ -64,6 +64,7 @@
     </form>
 
     <script src="/static/scripts/signinValidation.js"></script>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

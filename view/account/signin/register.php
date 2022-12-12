@@ -18,7 +18,7 @@
     </div>
     <div class="signInContent" id="signinBox">
         <form method="post" class="form">
-            <h1>Sign In</h1>
+            <h1>Register</h1>
 
             <?php if ($error) { ?>
                 <div class="error">

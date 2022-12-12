@@ -19,6 +19,7 @@
         <p><a class="button disabled" href="#">View Orders</a></p>
         <p><a class="button" href="<?= $this->basePath ?>/account/signout">Sign out</a></p>
     </div>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

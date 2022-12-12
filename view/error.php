@@ -20,6 +20,7 @@
         </a></p>
         <?php } ?>
     </div>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

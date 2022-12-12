@@ -24,6 +24,7 @@
         <h2>Orders</h2>
         NOT IMPLEMENTED
     </div>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

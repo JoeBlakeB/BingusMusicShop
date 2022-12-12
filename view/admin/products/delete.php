@@ -48,6 +48,7 @@
             Cancel
         </a></p>
     </div>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

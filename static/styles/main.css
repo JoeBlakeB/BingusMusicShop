@@ -33,9 +33,17 @@ h1 {
 body {
     margin: 0;
     min-width: 300px;
+    min-height: 100vh;
+    display: flex;
+    flex-flow: column;
 
     --theme-main: #313849;
     --theme-purple: #9a82b4;
+}
+
+body > * {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* General */
@@ -594,4 +602,48 @@ input[type=file] {
 .warning {
     color: red;
     font-weight: bold;
+}
+
+/* Footer */
+
+footer {
+    padding: 8px;
+    background-color: var(--theme-main);
+    color: #eee;
+    text-align: center;
+    margin-top: auto;
+}
+
+#sitemap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+    max-width: 500px;
+    margin: auto;
+    margin-bottom: 8px;
+}
+
+footer a {
+    color: #eee;
+}
+
+footer h3 {
+    font-size: 16px;
+    margin: 8px 0 4px;
+}
+
+footer p {
+    font-size: 12px;
+    margin: 2px;
+}
+
+@media screen and (min-width: 450px) {
+    footer br {
+        display: none;
+    }
+}
+
+body > *:nth-last-child(2) {
+    margin-bottom: 16px;
 }

@@ -15,8 +15,8 @@
         <h1>Admin - Users</h1>
 
         <p><a href="." class="button">
-            Back to Admin Overview
-        </a></p>
+                Back to Admin Overview
+            </a></p>
 
         <?php
         if (isset($actionMessage)) {
@@ -76,6 +76,7 @@
             </tbody>
         </table>
     </div>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

@@ -133,6 +133,7 @@
         </div>
         <script src="/static/scripts/imageManagement.js"></script>
     <?php } ?>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>

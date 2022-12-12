@@ -36,6 +36,7 @@
         <h3>Price: <?= $product->getPriceStr() ?></h3>
         <p><?= $product->getDescription() ?></p>
     </div>
+    <?php require "include/footer.php"; ?>
 </body>
 
 </html>
