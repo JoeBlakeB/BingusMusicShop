@@ -16,7 +16,7 @@
         <p><a class="button" href="<?= $this->basePath ?>/account/addresses">Manage Addresses</a></p>
         <p><a class="button" href="<?= $this->basePath ?>/account/payments">Manage Payment Methods</a></p>
         <p><a class="button" href="<?= $this->basePath ?>/account/security">Manage Account Security</a></p>
-        <p><a class="button disabled" href="#">View Orders</a></p>
+        <p><a class="button" href="<?= $this->basePath ?>/account/orders">View Orders</a></p>
         <p><a class="button" href="<?= $this->basePath ?>/account/signout">Sign out</a></p>
     </div>
     <?php require_once("include/footer.php"); ?>

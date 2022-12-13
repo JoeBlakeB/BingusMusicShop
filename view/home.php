@@ -4,7 +4,7 @@
 <head>
     <?php
     require_once("include/head.php");
-    require_once("view/include/productList.php");
+    require_once("include/productList.php");
     ?>
 </head>
 

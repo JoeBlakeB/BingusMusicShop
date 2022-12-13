@@ -7,9 +7,12 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
+require_once("controller/ordersTrait.php");
 require_once("model/accountModel.php");
 
 class AccountController extends AbstractController {
+    use OrdersTrait;
+
     /**
      * Decide which account page to show.
      * 
@@ -175,6 +178,17 @@ class AccountController extends AbstractController {
             }
         }
         require_once("view/account/manage/security.php");
+    }
+
+    /**
+     * Run the orders view page method from the ordersTrait for the account
+     */
+    public function ordersPage() {
+        if (!isset($_SESSION["account"])) {
+            return header("Location: signin");
+        }
+        $this->maxPathLength(2);
+        $this->ordersView("account", $_SESSION["account"]["id"]);
     }
 
     /**

@@ -3,7 +3,7 @@
         <div>
             <h3>Navigation</h3>
             <p><a href="<?= $this->basePath; ?>/">Home</a></p>
-            <p><a href="<?= $this->basePath; ?>/search?order=newest">New Products</a></p>
+            <p><a href="<?= $this->basePath; ?>/search">New Products</a></p>
         </div>
         <div>
             <h3>Account</h3>

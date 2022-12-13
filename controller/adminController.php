@@ -7,7 +7,11 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
+require_once("controller/ordersTrait.php");
+
 class AdminController extends AbstractController {
+    use OrdersTrait;
+
     /**
      * Decide which admin page to show.
      * If the user is not admin then show an error.
@@ -244,6 +248,14 @@ class AdminController extends AbstractController {
                 "success" => false
             ], 500);
         }
+    }
+
+    /**
+     * Run the orders view page method from the ordersTrait
+     */
+    public function ordersPage() {
+        $this->maxPathLength(2);
+        $this->ordersView("admin");
     }
 }
 

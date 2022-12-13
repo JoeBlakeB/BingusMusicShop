@@ -5,6 +5,7 @@
 :root,
 body {
     background-color: var(--theme-main);
+    display: block;
 }
 
 #signinHeader {

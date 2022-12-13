@@ -75,28 +75,27 @@ class ProductModel extends AbstractModel {
             $this->genRelevanceSelect(str_replace(" ", "%", $searchTerm), 250, 80);
             foreach (explode(" ", $searchTerm) as $searchSegment) {
                 $len = strlen($searchSegment);
-                if ($len > 3) {
-                    $len *= (int)($len > 6 ? 1.5 : 1);
-                    $this->searchTableSql .= " UNION ";
-                    $this->genRelevanceSelect($searchSegment, $len * 8, $len);
-                }
+                $len *= (int)($len > 6 ? 1.5 : 1);
+                $this->searchTableSql .= " UNION ";
+                $this->genRelevanceSelect($searchSegment, $len * 8, $len);
             }
 
             $stmt = $this->dbh->prepare("SELECT search.productID, search.name, 
-                    search.description, search.price, search.stock, images.fileHash, 
+                    search.price, search.stock, images.fileHash, 
                     images.fileType, SUM(search.relevance) AS relevance
                 FROM ( $this->searchTableSql ) AS search LEFT JOIN $imagesTableSql
                 ON search.productID = images.productID
-                GROUP BY search.productID, search.name, search.description, 
+                GROUP BY search.productID, search.name, 
                     search.price, search.stock, images.fileHash, images.fileType
-                HAVING relevance > " . (30 + (3*strlen($searchTerm))) . "
+                HAVING relevance > " . (30 + (2 * strlen($searchTerm))) . "
                 AND search.stock > 0
                 ORDER BY relevance DESC, productID DESC");
             $stmt->execute($this->searchTableParams);
         }
         else {
             $stmt = $this->dbh->prepare(
-                "SELECT products.*, images.fileHash, images.fileType
+                "SELECT products.productID, products.name, products.price, 
+                    images.fileHash, images.fileType
                 FROM products LEFT JOIN $imagesTableSql
                 ON products.productID = images.productID
                 WHERE name LIKE :searchTerm
@@ -122,10 +121,10 @@ class ProductModel extends AbstractModel {
      */
     private function genRelevanceSelect($searchSegment, $relevanceName, $relevanceDesc) {
         $this->searchTableSql .= 
-            "SELECT productID, name, description, price, stock, $relevanceName AS relevance FROM products
+            "SELECT productID, name, price, stock, $relevanceName AS relevance FROM products
             WHERE name LIKE :param$this->searchTableIndex
             UNION
-            SELECT productID, name, description, price, stock, $relevanceDesc AS relevance FROM products
+            SELECT productID, name, price, stock, $relevanceDesc AS relevance FROM products
             WHERE description LIKE :param$this->searchTableIndex";
         $this->searchTableParams["param" . ($this->searchTableIndex++)] = "%$searchSegment%";
     }
@@ -249,9 +248,10 @@ class Product extends ProductModel implements ModelObjectInterface {
         $this->dbh = $dbh;
         $this->id = $data["productID"];
         $this->name = $data["name"];
-        $this->description = $data["description"];
+        $this->description = isset($data["description"]) ? $data["description"] : "";
         $this->price = $data["price"];
-        $this->stock = $data["stock"];
+        $this->stock = isset($data["stock"]) ? $data["stock"] : 0;
+        $this->quantity = isset($data["quantity"]) ? $data["quantity"] : 0;
         if (isset($data["fileHash"])) {
             $this->images = [[
                 "fileHash" => $data["fileHash"],
@@ -302,10 +302,17 @@ class Product extends ProductModel implements ModelObjectInterface {
     }
 
     /**
-     * @return int The product's stock.
+     * @return int The product's stock, or 0 if not set.
      */
     public function getStock() {
         return $this->stock;
+    }
+
+    /**
+     * @return int The quantity of the product if bought, 0 if not.
+     */
+    public function getQuantity() {
+        return $this->quantity;
     }
 
     /**

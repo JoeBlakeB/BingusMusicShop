@@ -54,11 +54,36 @@ CREATE TABLE IF NOT EXISTS cards (
 );
 
 CREATE TABLE IF NOT EXISTS orders (
-
+    orderID         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    accountID       INT UNSIGNED,
+    addressID       INT UNSIGNED,
+    cardID          INT UNSIGNED,
+    orderDate       DATETIME     NOT NULL,
+    PRIMARY KEY (orderID),
+    FOREIGN KEY (accountID)
+        REFERENCES accounts (accountID)
+        ON DELETE SET NULL,
+    FOREIGN KEY (addressID)
+        REFERENCES addresses (addressID)
+        ON DELETE SET NULL,
+    FOREIGN KEY (cardID)
+        REFERENCES cards (cardID)
+        ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS orderItems (
-    
+    orderItemID     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    orderID         INT UNSIGNED NOT NULL,
+    productID       INT UNSIGNED,
+    quantity        INT UNSIGNED NOT NULL,
+    priceAtPurchase DECIMAL(7,2) NOT NULL,
+    PRIMARY KEY (orderItemID),
+    FOREIGN KEY (orderID)
+        REFERENCES orders (orderID)
+        ON DELETE CASCADE,
+    FOREIGN KEY (productID)
+        REFERENCES products (productID)
+        ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS products (

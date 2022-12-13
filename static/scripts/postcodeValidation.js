@@ -11,7 +11,7 @@ var countryContainer = document.getElementById("countryContainer");
 form.addEventListener("submit", function (event) {
     if (countryContainer.children[1].value == "GB") {
         let value = postcodeContainer.children[1].value.trim();
-        let valid = value.match(/^[A-Za-z]{1,2}[0-9][0-9A-Za-z](| )[0-9][A-Za-z]{2}$/);
+        let valid = value.match(/^[A-Za-z]{1,2}[0-9]([0-9A-Za-z]|)(| )[0-9][A-Za-z]{2}$/);
         if (valid) {
             return form.submit();
         }

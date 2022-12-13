@@ -545,9 +545,9 @@ class Card extends AccountModel implements ModelObjectInterface {
         $this->accountID = $data["accountID"];
         $this->fullName = $data["fullName"];
         $this->cardNumber = $data["cardNumber"];
-        $this->securityCode = $data["securityCode"];
-        $this->expiryMonth = $data["expiryMonth"];
-        $this->expiryYear = $data["expiryYear"];
+        $this->securityCode = isset($data["securityCode"]) ? $data["securityCode"] : null;
+        $this->expiryMonth = isset($data["expiryMonth"]) ? $data["expiryMonth"] : null;
+        $this->expiryYear = isset($data["expiryYear"]) ? $data["expiryYear"] : null;
     }
 
     public function __toString() {

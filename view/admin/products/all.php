@@ -15,12 +15,12 @@
         <h1>Admin - All Products</h1>
 
         <p><a href="<?= $this->basePath ?>/admin/" class="button">
-                Back to Admin Overview
-            </a></p>
+            Back to Admin Overview
+        </a></p>
 
         <p><a href="<?= $this->basePath ?>/admin/products/new" class="button">
-                Add a New Product
-            </a></p>
+            Add a New Product
+        </a></p>
 
         <table>
             <thead>

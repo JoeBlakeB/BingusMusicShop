@@ -782,6 +782,38 @@ input[type=file] {
     font-weight: bold;
 }
 
+/* Order List */
+
+.ordersList>div {
+    border: 2px dashed #bbb;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 12px 0;
+}
+
+.ordersList h2 {
+    margin: 0;
+}
+
+.ordersList h3,
+.ordersList p {
+    margin: 8px 0;
+}
+
+.ordersList ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 0 20px;
+}
+
+.ordersList ul li {
+    margin: 4px 0;
+}
+
+.ordersList .orderListItemHeader {
+    display: inline-block;
+}
+
 /* Footer */
 
 footer {

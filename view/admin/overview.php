@@ -19,10 +19,10 @@
         <p><a class="button" href="<?= $this->basePath ?>/admin/products/new">Add a New Product</a></p>
 
         <h2>Users</h2>
-        <p><a class="button" href="<?= $this->basePath ?>/admin/users">Users</a></p>
+        <p><a class="button" href="<?= $this->basePath ?>/admin/users">User Management</a></p>
 
         <h2>Orders</h2>
-        NOT IMPLEMENTED
+        <p><a class="button" href="<?= $this->basePath ?>/admin/orders">All Orders</a></p>
     </div>
     <?php require_once("include/footer.php"); ?>
 </body>
