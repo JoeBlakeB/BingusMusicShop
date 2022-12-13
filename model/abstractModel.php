@@ -35,8 +35,8 @@ abstract class AbstractModel {
                 $credentials["username"],
                 $credentials["password"],
                 array(
-                    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-                    PDO::MYSQL_ATTR_SSL_CAPATH => '/public_html',
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+                    PDO::MYSQL_ATTR_SSL_CAPATH => "/public_html",
                     PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => 0
                 )
             );

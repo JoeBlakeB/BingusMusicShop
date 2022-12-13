@@ -3,13 +3,13 @@
 
 <head>
     <?php
-    require "include/head.php";
-    require "view/include/productList.php";
+    require_once("include/head.php");
+    require_once("view/include/productList.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content homepage">
         <?php if (isset($message)) { ?>
             <p><?php echo $message; ?></p>
@@ -24,7 +24,7 @@
             </div>
         <?php } ?>
     </div>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-require "model/productModel.php";
+require_once("model/productModel.php");
 
 class SearchController extends AbstractController {
     /**
@@ -32,6 +32,6 @@ class SearchController extends AbstractController {
             $this->showError(500, "Internal Server Error", "An error occurred while trying to search for products.");
         }
 
-        require "view/search.php";
+        require_once("view/search.php");
     }
 }

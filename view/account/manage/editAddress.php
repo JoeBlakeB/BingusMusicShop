@@ -4,7 +4,7 @@
 <head>
     <?php
     $title = "Address Management";
-    require "include/head.php";
+    require_once("include/head.php");
 
     $fullName = isset($_POST["name"]) ? $_POST["name"] : (
         isset($address) ? $address->getFullName() : $_SESSION["account"]["fullName"]);
@@ -24,7 +24,7 @@
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content multipleContents">
         <h1><?= isset($address) ? "Edit Address" : "New Address"; ?></h1>
 
@@ -68,7 +68,7 @@
         <input type="submit" value="Save">
     </form>
     <script src="/static/scripts/postcodeValidation.js"></script>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

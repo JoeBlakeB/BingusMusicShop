@@ -7,12 +7,12 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-require "model/abstractModel.php";
+require_once("model/abstractModel.php");
 
 class AccountModel extends AbstractModel {
     public function __construct() {
         parent::__construct();
-        require "model/countriesList.php";
+        require_once("model/countriesList.php");
         $this->countriesList = $countriesList;
     }
 

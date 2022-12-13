@@ -26,12 +26,12 @@
         $success = "Product created successfully.";
     }
     $title = ($edit ? $product->getName() : "New Product") . " - Admin";
-    require "include/head.php";
+    require_once("include/head.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
 
     <div class="content multipleContents">
         <h1>Admin - <?= $edit ?
@@ -133,7 +133,7 @@
         </div>
         <script src="/static/scripts/imageManagement.js"></script>
     <?php } ?>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-require "model/productModel.php";
+require_once("model/productModel.php");
 
 class HomeController extends AbstractController {
     public function invoke() {
@@ -24,6 +24,6 @@ class HomeController extends AbstractController {
             $message = "Please use the search bar above to find the things you're looking for.";
         }
         
-        require "view/home.php";
+        require_once("view/home.php");
     }
 }

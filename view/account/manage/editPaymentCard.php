@@ -4,7 +4,7 @@
 <head>
     <?php
     $title = "Payment Card Management";
-    require "include/head.php";
+    require_once("include/head.php");
 
 
     $fullName = isset($_POST["name"]) ? $_POST["name"] : (isset($card) ? $card->getFullName() : $_SESSION["account"]["fullName"]);
@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content multipleContents">
         <h1><?= isset($card) ? "Edit Credit or Debit Card" : "New Credit or Debit Card"; ?></h1>
 
@@ -57,7 +57,7 @@
         </div>
         <input type="submit" value="Save">
     </form>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

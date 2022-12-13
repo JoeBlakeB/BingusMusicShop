@@ -6,13 +6,13 @@
     $title = empty($searchTerm) ?
         "All Products" :
         "Search for \"" . $searchTerm . "\"";
-    require "include/head.php";
-    require "view/include/productList.php";
+    require_once("include/head.php");
+    require_once("view/include/productList.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content">
         <?php if (empty($results) && !$totalPages) { ?>
             <p>
@@ -68,7 +68,7 @@
 
             <?php if ($totalPages > 1) { ?>
             <div id="pageSelector">
-                <span class="pageButton" value='<?= $page - 1; ?>'>
+                <span class="pageButton" value="<?= $page - 1; ?>">
                     <i class="fa-solid fa-angle-left"></i> <span>Previous</span>
                 </span>
                 <?php
@@ -118,7 +118,7 @@
         <?php } ?>
     </div>
     <script src="/static/scripts/searchPage.js"></script>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

@@ -7,12 +7,12 @@
     $images = $product->getImages();
     $mediaImage = $images[0]["url"];
     $description = $product->getDescription();
-    require "include/head.php";
+    require_once("include/head.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content viewProduct <?= empty($images) ? "noImages" : "" ?>">
         <h1 class="<?= !$product->getStock() ? "outOfStock" : ""; ?>"><?= $product->getName() ?><?= !$product->getStock() ? "<br>(Out of Stock)" : ""; ?></h1>
 
@@ -38,7 +38,7 @@
         <h3>Price: <?= $product->getPriceStr() ?></h3>
         <p><?= $product->getDescription() ?></p>
     </div>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

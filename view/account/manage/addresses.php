@@ -4,12 +4,12 @@
 <head>
     <?php
     $title = "Address Management";
-    require "include/head.php";
+    require_once("include/head.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content">
         <h1>Your Addresses</h1>
 
@@ -29,7 +29,7 @@
         <?php }
         } ?>
     </div>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

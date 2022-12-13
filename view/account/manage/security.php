@@ -4,7 +4,7 @@
 <head>
     <?php
     $title = "Account Security";
-    require "include/head.php";
+    require_once("include/head.php");
     $twoFactorEnabled = $account->getIsTwoFactorEnabled();
 
     if (!isset($valid)) {
@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content multipleContents">
         <h1>Account Security</h1>
         <p><a class="button" href=".">Back to Account</a></p>
@@ -64,7 +64,7 @@
     </form>
 
     <script src="/static/scripts/signinValidation.js"></script>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

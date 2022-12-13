@@ -7,6 +7,6 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-require "controller/main.php";
+require_once("controller/main.php");
 $controller = new Controller("/BingusMusicShop.php");
 $controller->invoke();

@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-require "model/abstractModel.php";
+require_once("model/abstractModel.php");
 
 class ProductModel extends AbstractModel {
     /**

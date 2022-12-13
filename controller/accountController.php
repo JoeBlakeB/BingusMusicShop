@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-require "model/accountModel.php";
+require_once("model/accountModel.php");
 
 class AccountController extends AbstractController {
     /**
@@ -30,7 +30,7 @@ class AccountController extends AbstractController {
         if (!isset($_SESSION["account"])) {
             return header("Location: $this->basePath/account/signin");
         }
-        require "view/account/details.php";
+        require_once("view/account/details.php");
     }
 
     /**
@@ -46,7 +46,7 @@ class AccountController extends AbstractController {
         if (isset($_GET["new"])) {
             $valid = $this->validateAddress($_POST, $accountModel->countriesList);
             if (!$valid[0]) {
-                return require "view/account/manage/editAddress.php";
+                return require_once("view/account/manage/editAddress.php");
             }
             try {
                 $account->addAddress($_POST);
@@ -71,7 +71,7 @@ class AccountController extends AbstractController {
                     $this->showError(500, "Internal Server Error", "An error occurred while editing the address. Please try again later.");
                 }
             }
-            return require "view/account/manage/editAddress.php";
+            return require_once("view/account/manage/editAddress.php");
         }
         else if (isset($_GET["delete"])) {
             $address = $account->getAddress($_GET["delete"]);
@@ -88,7 +88,7 @@ class AccountController extends AbstractController {
         }
 
         $addresses = $account->getAddresses();
-        require "view/account/manage/addresses.php";
+        require_once("view/account/manage/addresses.php");
     }
 
     /**
@@ -104,7 +104,7 @@ class AccountController extends AbstractController {
         if (isset($_GET["new"])) {
             $valid = $this->validateCard($_POST);
             if (!$valid[0]) {
-                return require "view/account/manage/editPaymentCard.php";
+                return require_once("view/account/manage/editPaymentCard.php");
             }
             try {
                 $account->addCard($_POST);
@@ -127,7 +127,7 @@ class AccountController extends AbstractController {
                     $this->showError(500, "Internal Server Error", "An error occurred while editing the payment method. Please try again later.");
                 }
             }
-            return require "view/account/manage/editPaymentCard.php";
+            return require_once("view/account/manage/editPaymentCard.php");
         }
         else if (isset($_GET["delete"])) {
             $card = $account->getCard($_GET["delete"]);
@@ -143,7 +143,7 @@ class AccountController extends AbstractController {
         }
 
         $cards = $account->getCards();
-        require "view/account/manage/payments.php";
+        require_once("view/account/manage/payments.php");
     }
 
     /**
@@ -174,7 +174,7 @@ class AccountController extends AbstractController {
                 }
             }
         }
-        require "view/account/manage/security.php";
+        require_once("view/account/manage/security.php");
     }
 
     /**
@@ -211,7 +211,6 @@ class AccountController extends AbstractController {
                         return header("Location: authentication");
                     }
 
-                    // Sign in
                     return $this->signIn($account);
                 }
                 else {
@@ -226,8 +225,7 @@ class AccountController extends AbstractController {
             }
         }
         
-        // Show the sign in page
-        require "view/account/signin/signin.php";
+        require_once("view/account/signin/signin.php");
     }
 
     /**
@@ -283,7 +281,7 @@ class AccountController extends AbstractController {
             ];
         }
 
-        require 'view/account/signin/register.php';
+        require_once("view/account/signin/register.php");
     }
 
     /**
@@ -292,7 +290,7 @@ class AccountController extends AbstractController {
     public function signoutPage() {
         $alreadySignedOut = !isset($_SESSION["account"]);
         session_destroy();
-        require 'view/account/signin/signout.php';
+        require_once("view/account/signin/signout.php");
     }
 
     /**
@@ -355,7 +353,7 @@ class AccountController extends AbstractController {
 
         $alreadyHaveEmail = isset($_SESSION["verification"]["email"]);
         $formType = "register";
-        require 'view/account/signin/verification.php';
+        require_once("view/account/signin/verification.php");
     }
 
     /**
@@ -381,7 +379,7 @@ class AccountController extends AbstractController {
 
         $alreadyHaveEmail = true;
         $formType = "signin";
-        require 'view/account/signin/verification.php';
+        require_once("view/account/signin/verification.php");
     }
 
     /**
@@ -508,7 +506,7 @@ class AccountController extends AbstractController {
 
         if ($data["country"] == "GB") {
             $valid["postcode"] = !!(isset($data["postcode"]) &&
-                preg_match("/^[A-Z]{1,2}[0-9][0-9A-Z](| )[0-9][A-Z]{2}$/",
+                preg_match("/^[A-Z]{1,2}[0-9]([0-9A-Z]|)(| )[0-9][A-Z]{2}$/",
                 strtoupper($data["postcode"])));
         }
         else {

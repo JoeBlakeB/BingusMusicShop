@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
 
-require "model/productModel.php";
+require_once("model/productModel.php");
 
 class ProductController extends AbstractController {
     /**
@@ -23,7 +23,7 @@ class ProductController extends AbstractController {
             $productModel = new ProductModel();
             $product = $productModel->getProductByID($productID);
             if ($product) {
-                exit(require "product.php");
+                exit(require_once("product.php"));
             } else {
                 $this->showError(404, "Product Not Found", "The product you requested could not be found.");
             }

@@ -4,12 +4,12 @@
 <head>
     <?php
     $title = "Account Details";
-    require "include/head.php";
+    require_once("include/head.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="content">
         <h1>Your Account</h1>
         <p>Hello <?php echo $_SESSION["account"]["fullName"]; ?>, you are currently signed in.</p>
@@ -19,7 +19,7 @@
         <p><a class="button disabled" href="#">View Orders</a></p>
         <p><a class="button" href="<?= $this->basePath ?>/account/signout">Sign out</a></p>
     </div>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

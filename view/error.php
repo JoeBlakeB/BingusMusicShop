@@ -4,12 +4,12 @@
 <head>
     <?php
     $title = $errorTitle;
-    require "include/head.php";
+    require_once("include/head.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
     <div class="centeredContent">
         <h1>Error <?=$errorCode?>: <?=$errorTitle?></h1>
         <p><?=$errorMessage?></p>
@@ -20,7 +20,7 @@
         </a></p>
         <?php } ?>
     </div>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

@@ -37,7 +37,7 @@ abstract class AbstractController {
      */
     public function showError($errorCode, $errorTitle, $errorMessage, $errorLinkHref = null, $errorLinkText = null) {
         http_response_code($errorCode);
-        exit(require "view/error.php");
+        exit(require_once("view/error.php"));
     }
 
     /**
@@ -83,7 +83,7 @@ abstract class AbstractController {
      * @param int $http The http response code
      */
     public function respondWithJson($data, $http = 200) {
-        header('Content-Type: application/json; charset=utf-8');
+        header("Content-Type: application/json; charset=utf-8");
         http_response_code($http);
         echo json_encode($data);
         exit();
@@ -114,7 +114,7 @@ class Controller extends AbstractController {
             $controller = isset($uri[0]) ? $uri[0] : "home";
             $controller = $controller . "Controller";
             if (file_exists("controller/$controller.php")) {
-                require "controller/$controller.php";
+                require_once("controller/$controller.php");
                 $controller = new $controller($uri, $this->basePath);
                 $controller->invoke();
             }
@@ -133,7 +133,7 @@ class Controller extends AbstractController {
      * @return array The URI
      */
     public function getUri() {
-        $uri = $_SERVER['REQUEST_URI'];
+        $uri = $_SERVER["REQUEST_URI"];
         $pos = strpos($uri, $this->basePath);
         $uri = substr($uri, $pos + 20);
         $uri = strstr($uri, "?", true) ?: $uri;

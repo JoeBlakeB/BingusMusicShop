@@ -65,7 +65,7 @@ class UploadController extends AbstractController {
         // Save metadata to database, then move the file.
         // If the file cannot be moved, then delete the metadata.
         try {
-            require "model/productModel.php";
+            require_once("model/productModel.php");
             $productModel = new ProductModel();
             $imageID = $productModel->addImage($productID, $fileHash, $fileType);
 

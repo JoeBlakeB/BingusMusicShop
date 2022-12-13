@@ -4,12 +4,12 @@
 <head>
     <?php
     $title = "Delete " . $product->getName() . " - Admin";
-    require "include/head.php";
+    require_once("include/head.php");
     ?>
 </head>
 
 <body>
-    <?php require "include/header.php"; ?>
+    <?php require_once("include/header.php"); ?>
 
     <div class="content">
         <h1>Admin - Delete Product</h1>
@@ -48,7 +48,7 @@
             Cancel
         </a></p>
     </div>
-    <?php require "include/footer.php"; ?>
+    <?php require_once("include/footer.php"); ?>
 </body>
 
 </html>

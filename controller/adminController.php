@@ -32,7 +32,7 @@ class AdminController extends AbstractController {
      * Show the admin details page.
      */
     public function overview() {
-        require "admin/overview.php";
+        require_once("admin/overview.php");
     }
 
     /**
@@ -43,7 +43,7 @@ class AdminController extends AbstractController {
      */
     public function usersPage() {
         $this->maxPathLength(2);
-        require "model/accountModel.php";
+        require_once("model/accountModel.php");
         $accountModel = new AccountModel();
         if (isset($_GET["accountID"])) {
             $account = $accountModel->getAccountByID($_GET["accountID"]);
@@ -84,7 +84,7 @@ class AdminController extends AbstractController {
         }
 
         $allAccounts = $accountModel->getAllAccounts();
-        require "admin/users.php";
+        require_once("admin/users.php");
     }
 
     /**
@@ -103,10 +103,10 @@ class AdminController extends AbstractController {
      * Show the page to view all products.
      */
     public function productsAll() {
-        require "model/productModel.php";
+        require_once("model/productModel.php");
         $productModel = new ProductModel();
         $products = $productModel->getAllProducts();
-        require "admin/products/all.php";
+        require_once("admin/products/all.php");
     }
 
     /**
@@ -116,7 +116,7 @@ class AdminController extends AbstractController {
         if (!empty($_POST)) {
             $valid = $this->validateProduct($_POST);
             if ($valid[0]) {
-                require "model/productModel.php";
+                require_once("model/productModel.php");
                 $productModel = new ProductModel();
                 $product = $productModel->createProduct($_POST["name"], $_POST["description"], $_POST["price"], $_POST["stock"]);
                 if ($product == null) {
@@ -132,14 +132,14 @@ class AdminController extends AbstractController {
             }
         }
         $edit = false;
-        require "admin/products/edit.php";
+        require_once("admin/products/edit.php");
     }
 
     /**
      * Show the page to edit a product.
      */
     public function editPageProducts() {
-        require "model/productModel.php";
+        require_once("model/productModel.php");
         $productModel = new ProductModel();
         $product = $productModel->getProductByID($_GET["id"]);
         if ($product == null) {
@@ -159,7 +159,7 @@ class AdminController extends AbstractController {
             }
         }
         $edit = true;
-        require "admin/products/edit.php";
+        require_once("admin/products/edit.php");
     }
 
     /**
@@ -195,7 +195,7 @@ class AdminController extends AbstractController {
      * Delete a product.
      */
     public function deletePageProducts() {
-        require "model/productModel.php";
+        require_once("model/productModel.php");
         $productModel = new ProductModel();
         $product = $productModel->getProductByID($_GET["id"]);
         if ($product == null) {
@@ -215,7 +215,7 @@ class AdminController extends AbstractController {
             $product->setStock(0);
             return header("Location: $this->basePath/admin/products");
         }
-        require "admin/products/delete.php";
+        require_once("admin/products/delete.php");
     }
 
     /**
@@ -226,7 +226,7 @@ class AdminController extends AbstractController {
             $this->pageNotFound();
         }
         try {
-            require "model/productModel.php";
+            require_once("model/productModel.php");
             $productModel = new ProductModel();
             if ($_GET["action"] == "delete") {
                 $productModel->deleteImage($_GET["imageID"]);
