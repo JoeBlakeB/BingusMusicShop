@@ -145,7 +145,7 @@ class OrderModel extends AbstractModel {
 
         $order["totalPrice"] = 0;
         foreach ($order["products"] as $product) {
-            $order["totalPrice"] += $product->getPriceInt() * $product->getQuantity();
+            $order["totalPrice"] += $product->getPriceDouble() * $product->getQuantity();
         }
 
         $order["card"] = new Card($this->dbh, [
@@ -161,5 +161,36 @@ class OrderModel extends AbstractModel {
         ];
 
         return $order;
+    }
+
+    /**
+     * Order one type of product for a user with a card and address.
+     * 
+     * @param Account $account The account.
+     * @param Product $product The product.
+     * @param int $quantity The quantity of the product
+     * @param Address $address The address to put on the order
+     * @param Card $card The card to charge (not implemented).
+     * @return int The order ID.
+     */
+    public function purchaseOneProduct($account, $product, $quantity, $address, $card) {
+        $stockUpdated = $product->decreaseStock($quantity);
+        if (!$stockUpdated) {
+            return null;
+        }
+        $stmt = $this->dbh->prepare(
+            "INSERT INTO orders (accountID, cardID, addressID, orderDate)
+            VALUES (:accountID, :cardID, :addressID, NOW());
+            INSERT INTO orderItems (orderID, productID, priceAtPurchase, quantity)
+            VALUES (LAST_INSERT_ID(), :productID, :priceAtPurchase, :quantity)");
+        $stmt->execute([
+            ":accountID" =>         $account->getID(),
+            ":cardID" =>            $card->getID(),
+            ":addressID" =>         $address->getID(),
+            ":productID" =>         $product->getID(),
+            ":priceAtPurchase" =>   $product->getPriceDouble(),
+            ":quantity" =>          $quantity
+        ]);
+        return $this->dbh->lastInsertId();
     }
 }

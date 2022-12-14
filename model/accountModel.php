@@ -418,6 +418,16 @@ class Address extends AccountModel implements ModelObjectInterface {
     }
     
     public function __toString() {
+        return $this->toString(",<br>");
+    }
+
+    /**
+     * Get the address as a string.
+     * 
+     * @param string $separator The separator to use between lines
+     * @return string The address
+     */
+    public function toString($separator = ",<br>") {
         $address = [
             htmlspecialchars($this->fullName),
             htmlspecialchars($this->addressLine1),
@@ -427,7 +437,7 @@ class Address extends AccountModel implements ModelObjectInterface {
             htmlspecialchars($this->postcode),
             $this->countriesList[$this->country]
         ];
-        return implode(",<br>", array_filter($address));
+        return implode($separator, array_filter($address));
     }
 
     /**

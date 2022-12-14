@@ -35,8 +35,27 @@
             </div>
         <?php } ?>
 
-        <h3>Price: <?= $product->getPriceStr() ?></h3>
+        <h3>
+            Price: <?= $product->getPriceStr() ?>
+            <?php if ($product->getStock() && isset($_SESSION["account"])) { ?>
+                <a class="button" href="<?= $this->basePath ?>/product/<?= $product->getID(); ?>?purchase">Buy Now</a>
+            <?php } if (isset($_SESSION["account"]) && $_SESSION["account"]["isAdmin"]) { ?>
+                <a class="button" href="<?= $this->basePath ?>/admin/products/edit?id=<?= $product->getID(); ?>">Edit</a>
+            <?php } ?>
+        </h3>
+
         <p><?= $product->getDescription() ?></p>
+
+        <div id="signinToBuyContainer">
+            <?php if ($product->getStock() && !isset($_SESSION["account"])) { ?>
+                <h3>Sign in to purchase this item</h3>
+                <p>You need an account to purchase an item, click the button below to sign in or register.</p>
+                <p>
+                    <a class="button" href="<?= $this->basePath ?>/account/signin">Sign In</a>
+                    <a class="button" href="<?= $this->basePath ?>/account/register">Register</a>
+                </p>
+            <?php } ?>
+        </div>
     </div>
     <?php require_once("include/footer.php"); ?>
 </body>

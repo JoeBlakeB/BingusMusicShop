@@ -65,7 +65,7 @@
                 </td>
                 <td> <?= $product->getPriceStr(); ?> </td>
                 <td> <?= $product->getQuantity(); ?> </td>
-                <td> £<?= number_format($product->getPriceInt() * $product->getQuantity(), 2); ?> </td>
+                <td> £<?= number_format($product->getPriceDouble() * $product->getQuantity(), 2); ?> </td>
             </tr>
         <?php } ?>
     </tbody>

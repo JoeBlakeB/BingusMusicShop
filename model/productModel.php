@@ -295,9 +295,9 @@ class Product extends ProductModel implements ModelObjectInterface {
     }
 
     /**
-     * @return int The price as an integer.
+     * @return double The price as a double.
      */
-    public function getPriceInt() {
+    public function getPriceDouble() {
         return $this->price;
     }
 
@@ -306,6 +306,34 @@ class Product extends ProductModel implements ModelObjectInterface {
      */
     public function getStock() {
         return $this->stock;
+    }
+
+    /**
+     * Check the stock hasnt been changed since the product was loaded,
+     * then decrease the stock if it is possible.
+     * 
+     * @param int $quantity The quantity to decrease the stock by.
+     * @return bool If the stock was decreased
+     */
+    public function decreaseStock($quantity) {
+        $stmt = $this->dbh->prepare(
+            "SELECT stock FROM products
+            WHERE productID = :productID
+            FOR UPDATE;");
+        $stmt->execute(["productID" => $this->id]);
+        $stock = $stmt->fetch()["stock"];
+        if ($stock < $quantity) {
+            return false;
+        }
+        $stmt = $this->dbh->prepare(
+            "UPDATE products
+            SET stock = stock - :quantity
+            WHERE productID = :productID;");
+        $stmt->execute([
+            "productID" => $this->id,
+            "quantity" => $quantity
+        ]);
+        return true;
     }
 
     /**

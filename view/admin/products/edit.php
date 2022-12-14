@@ -13,7 +13,7 @@
     }
     if ($edit) {
         $productName = $product->getName();
-        $productPrice = $product->getPriceInt();
+        $productPrice = $product->getPriceDouble();
         $productStock = $product->getStock();
         $productDescription = $product->getDescription();
     } else {

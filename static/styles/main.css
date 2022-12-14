@@ -336,6 +336,11 @@ input[type=submit] {
     width: calc(100% - 200px);
 }
 
+.basicResponsiveForm.purchaseForm .inputContainer input,
+.basicResponsiveForm.purchaseForm .inputContainer select {
+    width: calc(100% - 150px);
+}
+
 select {
     height: 32px;
     margin: 4px 0;
@@ -588,6 +593,7 @@ input[type=file] {
 }
 
 /* Page Selector */
+
 #pageSelector {
     cursor: default;
     user-select: none;
@@ -717,19 +723,29 @@ input[type=file] {
     margin: 4px 0 12px;
 }
 
-.viewProduct h3 {
+.viewProduct > h3,
+#signinToBuyContainer {
     margin: 0 0 12px 0;
 }
 
+.outOfStock {
+    color: #600;
+}
+
+#signinToBuyContainer h3 {
+    margin-top: 0;
+}
+
 @media screen and (min-width: 801px) {
-    .viewProduct:not(.noImages) h1,
-    .viewProduct:not(.noImages) h3 {
+    .viewProduct:not(.noImages) > h1,
+    .viewProduct:not(.noImages) > h3,
+    #signinToBuyContainer {
         float: right;
         width: calc(35% + 115px);
         padding: 0 12px 0 0;
     }
 
-    .viewProduct:not(.noImages) p {
+    .viewProduct:not(.noImages) > p {
         padding: 10px
     }
 
@@ -739,26 +755,23 @@ input[type=file] {
 }
 
 @media screen and (max-width: 800px) {
-    .viewProduct h3,
-    .viewProduct p {
+    .viewProduct > h3,
+    .viewProduct > p,
+    #signinToBuyContainer {
         float: left;
     }
 
-    .viewProduct h3 {
+    .viewProduct > h3 {
         margin: 12px 0 8px;
     }
 
-    .viewProduct.noImages h3 {
+    .viewProduct.noImages > h3 {
         margin-top: 0;
     }
 
-    .viewProduct p {
+    .viewProduct > p {
         margin: 0 0 12px;
     }
-}
-
-.outOfStock {
-    color: #600;
 }
 
 /* Address List & Payment Methods List */

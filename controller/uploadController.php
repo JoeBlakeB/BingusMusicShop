@@ -3,7 +3,6 @@
 /**
  * Upload images for products.
  *
- * 
  * @author Joe Baker
  * @copyright Copyright (c) 2022 JoeBlakeB, all rights reserved.
  */
