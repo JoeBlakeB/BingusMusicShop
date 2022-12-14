@@ -3,15 +3,17 @@
 ![](https://img.shields.io/badge/Lines_of_PHP-3883-blue)
 ![](https://img.shields.io/badge/Total_Lines_of_Code-5226-blue)
 
-A modern web application using PHP and MySQL for A musical instrument retailer. Made for the Level 5 Web Programming Unit at Bournemouth University.
+A modern web application built using PHP with the MVC pattern and MySQL for a musical instrument retailer. Made for the Level 5 Web Programming Unit at Bournemouth University. The website is currently hosted on the university's server at [https://s5411045.bucomputing.uk/BingusMusicShop.php](https://s5411045.bucomputing.uk/BingusMusicShop.php).
 
-The lab and tutorial tasks are available [here](https://github.com/JoeBlakeB/WebProgramming2022).
+![Example Screenshot](https://github.com/joeblakeb/BingusMusicShop/blob/main/documentation/Screenshot.png?raw=true)
+
+The [Self Reflection](https://github.com/JoeBlakeB/BingusMusicShop/blob/main/documentation/Self-Reflection.md) is in the `documentation` directory and the lab and tutorial tasks are available in my [WebProgramming2022](https://github.com/JoeBlakeB/WebProgramming2022) repository. 
 
 ## SQL Database Setup
 
 ### Database Structure
 
-The database structure must be manually created before using the website. The CREATE script is in the `databaseStructure.sql` file in the `model` directory. It also incldes a command to create the admin user. The DROP commands are commented out at the bottom of the file.
+The database structure must be manually created before using the website. The CREATE script is in the `databaseStructure.sql` file in the `model` directory. It also incldes a command to create the admin user. The DROP commands are commented out at the bottom of the file. An entity relationship diagram for the structure is available in the `documentation` directory as [DatabaseERD.drawio.svg](https://github.com/joeblakeb/BingusMusicShop/blob/main/documentation/DatabaseERD.drawio.svg?raw=true).
 
 ### Database Credentials
 
