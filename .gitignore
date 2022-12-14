@@ -2,4 +2,4 @@
 .vscode/
 .directory
 databaseCredentials.json
-images/
+/images/

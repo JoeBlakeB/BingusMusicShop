@@ -261,7 +261,7 @@ class Product extends ProductModel implements ModelObjectInterface {
             ]];
             $this->imageCount = 1;
         }
-        else {
+        else if (isset($data["imageCount"])) {
             $this->imageCount = $data["imageCount"];
         }
     }
