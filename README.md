@@ -1,7 +1,7 @@
 # Bingus Music Shop
 
-![](https://img.shields.io/badge/Lines_of_PHP-3263-blue)
-![](https://img.shields.io/badge/Total_Lines_of_Code-4539-blue)
+![](https://img.shields.io/badge/Lines_of_PHP-3879-blue)
+![](https://img.shields.io/badge/Total_Lines_of_Code-5222-blue)
 
 A modern web application using PHP and MySQL for A musical instrument retailer. Made for the Level 5 Web Programming Unit at Bournemouth University.
 
