@@ -110,6 +110,11 @@ body {
     padding: 16px 0;
 }
 
+.form input[type="submit"]:hover,
+.signOutButton:hover {
+    background-color: var(--theme-hover);
+}
+
 #switchSignInButton,
 input[type="submit"],
 .signOutButton {

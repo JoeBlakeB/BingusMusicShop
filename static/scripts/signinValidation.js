@@ -41,24 +41,24 @@ form.addEventListener("submit", function (event) {
     event.preventDefault();
 });
 
-// Check fields are valid, if they are not warn the user
-// return bool for validity to use in submit event listener.
-
-// Update the DOM after the check
+/**
+ * Update the DOM to show if the input is valid or not.
+ * 
+ * @param {element} element the input container
+ * @param {bool} valid if the input is valid
+ * @param {string} message what to tell the user 
+ */
 function verify(element, valid=true, message="") {
-    if (valid) {
-        element.classList.remove("error");
-    }
-    else {
-        element.classList.add("error");
-        element.lastElementChild.innerHTML = message;
-    }
+    element.classList.toggle("error", !valid);
+    element.lastElementChild.innerHTML = message;
 }
 
-// Used in both register and signin
-
-// Checks the email is a valid email,
-// already in use checks are done server side.
+/**
+ * Only checks if the email is valid.
+ * Already in use checks are done server side.
+ * 
+ * @returns {boolean} if the email is valid
+ */
 function verifyEmail() {
     let email = emailContainer.children[1].value;
     let error = false;
@@ -72,9 +72,11 @@ function verifyEmail() {
     return !error;
 }
 
-// Used in register only
-
-// Checks if password is 8-256 characters and has a-z A-Z and 0-9
+/**
+ * Checks if password is 8-256 characters and has a-z A-Z and 0-9
+ * 
+ * @returns {boolean} if the password is valid
+ */
 function verifyPassword() {
     let password = passwordContainer.children[1].value;
     let error = false;
@@ -107,7 +109,11 @@ function verifyPassword() {
     }
 }
 
-// Checks the passwords match.
+/**
+ * Check that the password confirmation matches the password.
+ * 
+ * @returns {boolean} if the password confirmation is valid
+ */
 function verifyPasswordConf() {
     passwordConfContainer.classList.add("edited");
     let equals = (passwordContainer.children[1].value
@@ -116,9 +122,13 @@ function verifyPasswordConf() {
     return equals;
 }
 
-// Only checks name is not empty because a name
-// could be literally anything and I dont want to
-// accidentally block a real name.
+/**
+ * Check the name is not empty.
+ * This is because a name can be literally anything
+ * and I dont want to accidentally block a real name.
+ * 
+ * @returns {boolean} if the name is valid
+ */
 function verifyName() {
     let name = nameContainer.children[1].value;
     let error = false;
@@ -132,7 +142,11 @@ function verifyName() {
     return !error;
 }
 
-// Check a verification code is a 6 digit number
+/**
+ * Check a verification code is a 6 digit number
+ * 
+ * @returns {boolean} if the code is valid
+ */
 function verifyAuth() {
     let auth = authContainer.children[1].value;
     let error = false;
@@ -143,7 +157,9 @@ function verifyAuth() {
     return !error;
 }
 
-// Add event listeners to check when the user exits the field
+// Add event listeners,
+// different pages have different inputs so not all are needed.
+
 if (formType != "auth" && formType != "changePassword") {
     var emailContainer = document.getElementById("emailContainer");
     emailContainer.children[1].addEventListener("focusout", verifyEmail);

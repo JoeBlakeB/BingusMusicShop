@@ -13,8 +13,11 @@ form.addEventListener("submit", function (event) {
     event.preventDefault();
 });
 
-// Check fields are valid, if they are not, colour the input red
-// Product name input
+/**
+ * Check the product name is valid, colour it red if it is not
+ * 
+ * @returns {boolean} if the name is valid
+ */
 function verifyName() {
     let value = nameContainer.children[1].value.trim();
     let valid = value.length > 0 && value.length <= 128;
@@ -24,7 +27,11 @@ function verifyName() {
 var nameContainer = document.getElementById("nameContainer");
 nameContainer.children[1].addEventListener("input", verifyName);
 
-// Price input
+/**
+ * Check the product price is valid, colour it red if it is not
+ * 
+ * @returns {boolean} if the price is valid
+ */
 function verifyPrice() {
     let value = priceInput.valueAsNumber;
     let valid = value < 10**7 && value > 0;
@@ -43,7 +50,11 @@ priceInput.addEventListener("keypress", function (event) {
     }
 });
 
-// Stock input
+/**
+ * Check the stock is valid, colour it red if it is not
+ * 
+ * @returns {boolean} if the stock is valid
+ */
 function verifyStock() {
     let value = stockContainer.children[1].valueAsNumber;
     let valid = value < 10**7 && value >= 0;
@@ -60,7 +71,11 @@ stockContainer.children[1].addEventListener("keypress", function (event) {
     }
 });
 
-// Description input
+/**
+ * Check the description is valid, colour it red if it is not
+ * 
+ * @returns {boolean} if the description is valid
+ */
 function verifyDescription() {
     let value = descriptionContainer.children[1].value.trim();
     let valid = value.length <= 2 ** 16 - 1;

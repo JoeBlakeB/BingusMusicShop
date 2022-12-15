@@ -38,6 +38,7 @@ body {
     flex-flow: column;
 
     --theme-main: #313849;
+    --theme-hover: #3e5388;
     --theme-purple: #9a82b4;
 }
 
@@ -289,6 +290,11 @@ input[type=submit] {
     font-size: large;
 }
 
+.button:hover,
+input[type=submit]:hover {
+    background-color: var(--theme-hover);
+}
+
 .button.disabled {
     background-color: darkgrey;
     color: lightgrey;
@@ -318,6 +324,7 @@ input[type=submit] {
 
 .basicResponsiveForm .inputContainer {
     height: 40px;
+    margin: 4px;
 }
 
 .basicResponsiveForm .inputContainer label  {
@@ -358,8 +365,8 @@ select {
         width: 100%;
     }
 
-    .basicResponsiveForm .inputContainer input,
-    .basicResponsiveForm.passwordEditForm .inputContainer input{
+    .basicResponsiveForm.editForm .inputContainer input,
+    .basicResponsiveForm.editForm .inputContainer select {
         width: 100%;
         float: none;
     }
