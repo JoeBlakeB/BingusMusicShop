@@ -3,7 +3,7 @@
 ![](https://img.shields.io/badge/Lines_of_PHP-3883-blue)
 ![](https://img.shields.io/badge/Total_Lines_of_Code-5270-blue)
 
-A modern web application built using PHP with the MVC pattern and MySQL for a musical instrument retailer. Made for the Level 5 Web Programming Unit at Bournemouth University. The website is currently hosted on the university's server at [https://s5411045.bucomputing.uk/BingusMusicShop.php](https://s5411045.bucomputing.uk/BingusMusicShop.php).
+A modern web application built using PHP with the MVC pattern and MySQL for a musical instrument retailer. Made for the Level 5 Web Programming Unit at Bournemouth University. The website is currently hosted on the university's server at https://bingus-music-shop.joeblakeb.com/.
 
 ![Example Screenshot](https://github.com/joeblakeb/BingusMusicShop/blob/main/documentation/Screenshot.png?raw=true)
 
